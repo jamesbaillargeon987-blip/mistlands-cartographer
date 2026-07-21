@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mistlands — Domain Cartographer</title>
+<style>
+:root{
+  --chrome:#1C221C; --chrome2:#242B24; --edge:#3A443A;
+  --ink:#DCD4BC; --ink-dim:#8E9788;
+  --ox:#8A3030; --ox-hi:#A84040;
+  --gold:#B08F42; --gold-hi:#D2AC55;
+  --mist:#C4C8C2;
+  --water:#6E8D9B;
+  --serif:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+  --mono:'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--chrome);color:var(--ink);font-family:var(--serif);font-size:14px}
+
+/* ── TOP BAR ── */
+#topbar{display:flex;align-items:center;gap:14px;height:52px;padding:0 14px;
+  background:linear-gradient(180deg,var(--chrome2),var(--chrome));border-bottom:1px solid var(--edge)}
+#title{font-variant:small-caps;letter-spacing:.22em;font-size:19px;color:var(--gold-hi);white-space:nowrap}
+#title b{color:var(--ink);font-weight:normal}
+#campname{background:transparent;border:none;border-bottom:1px dotted var(--edge);color:var(--ink);
+  font-family:var(--serif);font-size:14px;font-style:italic;width:170px;padding:2px 4px}
+#campname:focus{outline:none;border-bottom-color:var(--gold)}
+#seasonbox{margin-left:auto;display:flex;align-items:center;gap:10px}
+#seasonlbl{font-variant:small-caps;letter-spacing:.14em;font-size:15px;color:var(--gold-hi)}
+.tbtn{font-family:var(--serif);font-variant:small-caps;letter-spacing:.1em;font-size:12.5px;
+  color:var(--ink);background:var(--chrome2);border:1px solid var(--edge);border-radius:3px;
+  padding:6px 12px;cursor:pointer;white-space:nowrap}
+.tbtn:hover{border-color:var(--gold);color:var(--gold-hi)}
+.tbtn.primary{background:linear-gradient(180deg,#5C2020,#411414);border-color:var(--ox-hi);color:#E8D9C0}
+.tbtn.primary:hover{border-color:var(--gold)}
+
+/* ── LAYOUT ── */
+#main{display:flex;height:calc(100% - 52px)}
+#rail{width:64px;background:var(--chrome);border-right:1px solid var(--edge);
+  display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;overflow-y:auto}
+.rlabel{font-size:9px;letter-spacing:.18em;color:var(--ink-dim);text-transform:uppercase;margin:8px 0 2px}
+.tool{width:48px;height:42px;border:1px solid transparent;border-radius:4px;background:transparent;
+  color:var(--ink);cursor:pointer;font-size:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.tool small{font-size:8px;letter-spacing:.08em;color:var(--ink-dim);text-transform:uppercase}
+.tool:hover{border-color:var(--edge)}
+.tool.active{border-color:var(--gold);background:rgba(176,143,66,.12)}
+.tool.active small{color:var(--gold-hi)}
+
+#stage{flex:1;position:relative;background:#141814;min-width:0}
+canvas#map{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
+#coords{position:absolute;left:10px;bottom:8px;font-family:var(--mono);font-size:11px;color:var(--ink-dim);pointer-events:none}
+#legend{position:absolute;left:10px;top:10px;background:rgba(20,24,20,.82);border:1px solid var(--edge);
+  border-radius:4px;padding:8px 10px;font-size:11px;line-height:1.7;pointer-events:none;display:none}
+#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(20,24,20,.85);
+  border:1px solid var(--edge);border-radius:4px;padding:5px 14px;font-size:12px;font-style:italic;
+  color:var(--ink-dim);pointer-events:none;white-space:nowrap}
+
+/* ── DRAWER ── */
+#drawer{width:302px;background:var(--chrome);border-left:1px solid var(--edge);display:flex;flex-direction:column}
+#dtabs{display:flex;border-bottom:1px solid var(--edge)}
+.dtab{flex:1;padding:9px 0;text-align:center;font-variant:small-caps;letter-spacing:.12em;font-size:13px;
+  color:var(--ink-dim);cursor:pointer;border-bottom:2px solid transparent;background:transparent;border-top:none;border-left:none;border-right:none;font-family:var(--serif)}
+.dtab.active{color:var(--gold-hi);border-bottom-color:var(--gold)}
+.dpane{flex:1;overflow-y:auto;padding:12px;display:none}
+.dpane.active{display:block}
+h3.sect{font-variant:small-caps;letter-spacing:.16em;font-size:13px;color:var(--gold-hi);
+  border-bottom:1px solid var(--edge);padding-bottom:4px;margin:14px 0 8px}
+h3.sect:first-child{margin-top:0}
+#provlist{display:flex;flex-direction:column;gap:4px}
+.provrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--edge);
+  border-radius:3px;cursor:pointer;background:var(--chrome2)}
+.provrow:hover{border-color:var(--gold)}
+.provrow.active{border-color:var(--gold);background:rgba(176,143,66,.10)}
+.pchip{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.4);flex:none}
+.pname{flex:1;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcount{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim)}
+.provrow{flex-wrap:wrap}
+.prowner{width:100%;padding-left:21px;font-size:10.5px;font-style:italic;color:var(--ink-dim)}
+.prowner .pdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.provrow.mine{border-left:3px solid var(--gold);padding-left:6px}
+.provrow.mine .prowner{color:var(--gold-hi)}
+.field{margin-bottom:9px}
+.field label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
+.field input[type=text],.field input[type=number],.field textarea,.field select{
+  width:100%;background:#151A15;border:1px solid var(--edge);border-radius:3px;color:var(--ink);
+  font-family:var(--serif);font-size:13.5px;padding:5px 7px}
+.field textarea{min-height:56px;resize:vertical;line-height:1.45}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.frow{display:flex;gap:8px}.frow .field{flex:1}
+#stampline{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin:4px 0 10px}
+.wide{width:100%;margin-top:4px}
+.danger{border-color:#6b3030;color:#c98a7a}
+.danger:hover{border-color:var(--ox-hi);color:#e8a790}
+
+/* chronicle */
+.chron-entry{border-left:2px solid var(--gold);padding:4px 10px;margin-bottom:10px}
+.chron-when{font-variant:small-caps;letter-spacing:.12em;font-size:13px;color:var(--gold-hi)}
+.chron-line{font-size:12.5px;font-style:italic;color:var(--ink);line-height:1.5}
+.chron-line .pdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:baseline}
+#chron-empty{font-style:italic;color:var(--ink-dim);font-size:13px;line-height:1.6}
+
+/* hex inspector */
+#hexinfo{font-size:12.5px;line-height:1.7;color:var(--ink)}
+#hexinfo .k{color:var(--ink-dim);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-right:6px}
+
+/* help overlay */
+#help{position:absolute;inset:0;background:rgba(12,15,12,.88);display:none;align-items:center;justify-content:center;z-index:30}
+#help.open{display:flex}
+#helpcard{max-width:560px;max-height:82%;overflow-y:auto;background:var(--chrome2);border:1px solid var(--gold);
+  border-radius:6px;padding:22px 26px;line-height:1.7;font-size:13.5px}
+#helpcard h2{font-variant:small-caps;letter-spacing:.2em;color:var(--gold-hi);font-weight:normal;margin-bottom:10px}
+#helpcard b{color:var(--gold-hi);font-weight:normal}
+#helpcard .kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--edge);border-radius:3px;padding:0 5px;color:var(--ink)}
+kbd{font-family:var(--mono)}
+.subsel{display:none;flex-direction:column;gap:2px;padding:4px 0;border-top:1px solid var(--edge);margin-top:4px}
+.subsel.open{display:flex}
+.sub{width:48px;font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-dim);
+  background:transparent;border:1px solid transparent;border-radius:3px;padding:3px 1px;cursor:pointer;font-family:var(--serif)}
+.sub:hover{border-color:var(--edge);color:var(--ink)}
+.sub.active{border-color:var(--gold);color:var(--gold-hi)}
+@media (prefers-reduced-motion: reduce){ /* honored in JS */ }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="title">The Mistlands <b>· Domain Cartographer</b></div>
+  <input id="campname" value="The Reclaimed Lands" title="Campaign name">
+  <div id="seasonbox">
+    <span id="seasonlbl">Spring, 551 HC</span>
+    <button class="tbtn primary" id="advanceBtn" title="Advance to the next season">Advance Season</button>
+    <button class="tbtn" id="saveBtn">Save</button>
+    <button class="tbtn" id="loadBtn">Load</button>
+    <button class="tbtn" id="pngBtn">Export PNG</button>
+    <button class="tbtn" id="helpBtn">?</button>
+    <input type="file" id="loadFile" accept=".json" style="display:none">
+  </div>
+</div>
+
+<div id="main">
+  <div id="rail">
+    <div class="rlabel">Survey</div>
+    <button class="tool" data-tool="inspect" title="Inspect / pan (Esc)">☉<small>inspect</small></button>
+    <div class="rlabel">Claim</div>
+    <button class="tool" data-tool="claim" title="Claim land from the mist (C)">🕯<small>claim</small></button>
+    <button class="tool" data-tool="release" title="Release land back to the mist (X)">🌫<small>release</small></button>
+    <div class="rlabel">Shape</div>
+    <button class="tool" data-tool="terrain" title="Paint terrain (T)">▲<small>terrain</small></button>
+    <div class="subsel" id="terrainSel">
+      <button class="sub" data-terr="plains">Plains</button>
+      <button class="sub" data-terr="farmland">Farmland</button>
+      <button class="sub" data-terr="forest">Forest</button>
+      <button class="sub" data-terr="hills">Hills</button>
+      <button class="sub" data-terr="mountains">Mountains</button>
+      <button class="sub" data-terr="swamp">Swamp</button>
+      <button class="sub" data-terr="water">Water</button>
+    </div>
+    <button class="tool" data-tool="road" title="Draw roads — drag across hexes (R)">〓<small>road</small></button>
+    <button class="tool" data-tool="river" title="Draw rivers — drag across hexes (V)">≋<small>river</small></button>
+    <button class="tool" data-tool="erasepath" title="Erase roads &amp; rivers on a hex">╳<small>er.path</small></button>
+    <div class="rlabel">Sites</div>
+    <button class="tool" data-tool="site" title="Place a site (S)">⌂<small>site</small></button>
+    <div class="subsel" id="siteSel">
+      <button class="sub" data-site="city">City</button>
+      <button class="sub" data-site="town">Town</button>
+      <button class="sub" data-site="village">Village</button>
+      <button class="sub" data-site="castle">Castle</button>
+      <button class="sub" data-site="ruin">Ruin</button>
+      <button class="sub" data-site="stone">Stone</button>
+      <button class="sub" data-site="source">Source</button>
+    </div>
+    <button class="tool" data-tool="erasesite" title="Remove a site">⌦<small>er.site</small></button>
+  </div>
+
+  <div id="stage">
+    <canvas id="map"></canvas>
+    <div id="coords"></div>
+    <div id="errbar" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);
+      max-width:80%;background:#4A1414;border:1px solid #A84040;border-radius:4px;color:#F0D9C8;
+      padding:6px 14px;font-size:12px;font-family:var(--mono);z-index:40"></div>
+    <div id="namebox" style="display:none;position:absolute;z-index:25;background:var(--chrome2);
+      border:1px solid var(--gold);border-radius:5px;padding:10px 12px;box-shadow:0 4px 14px rgba(0,0,0,.5);width:230px">
+      <div id="nb_title" style="font-variant:small-caps;letter-spacing:.14em;font-size:12px;color:var(--gold-hi);margin-bottom:6px">Name this site</div>
+      <input id="nb_input" type="text" style="width:100%;background:#151A15;border:1px solid var(--edge);
+        border-radius:3px;color:var(--ink);font-family:var(--serif);font-size:14px;padding:6px 8px" placeholder="e.g. Blackfen Keep">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="tbtn" id="nb_save" style="flex:1">Save name</button>
+        <button class="tbtn" id="nb_cancel" style="flex:0 0 auto">Skip</button>
+      </div>
+    </div>
+    <div id="hint">Create a province, take the candle, and claim your first hex from the mist.</div>
+    <div id="help">
+      <div id="helpcard">
+        <h2>Cartographer's Guide</h2>
+        <p>The world begins as mist. Regents <b>claim</b> hexes to call land into being — each claim is
+        stamped with the current season and year, and the Chronicle remembers.</p>
+        <p><b>Claim</b> 🕯 — pick a province (or make one), then click or drag in the fog. After the first
+        hex, new land must touch existing land: the frontier only moves outward. <b>Release</b> 🌫 returns
+        land to the mist.</p>
+        <p><b>Terrain</b> ▲ paints claimed land. <b>Roads</b> 〓 and <b>rivers</b> ≋ are drawn by dragging a
+        path across hexes. <b>Sites</b> ⌂ place cities, castles, standing stones and the like — the site appears
+        at once and a small naming card opens beside it.</p>
+        <p><b>Inspect</b> ☉ — click any claimed hex to open its province dossier. Drag to pan (any tool:
+        right-drag or hold <span class="kbd">Space</span>), scroll to zoom.</p>
+        <p><b>Advance Season</b> moves the calendar Spring→Summer→Autumn→Winter and rolls the year after
+        Winter. New claims stamp with the new date. The Chronicle tab lists every season's conquests and
+        can <b>replay</b> the whole reclamation from the first candle.</p>
+        <p><b>Save</b> writes the world to a JSON file; <b>Load</b> restores it. The map also autosaves in
+        this browser. <b>Export PNG</b> renders a shareable image.</p>
+        <p style="margin-top:10px">Keys: <span class="kbd">C</span> claim · <span class="kbd">X</span> release ·
+        <span class="kbd">T</span> terrain · <span class="kbd">R</span> road · <span class="kbd">V</span> river ·
+        <span class="kbd">S</span> site · <span class="kbd">Esc</span> inspect</p>
+        <button class="tbtn wide" id="helpClose" style="margin-top:14px">Return to the map</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="drawer">
+    <div id="dtabs">
+      <button class="dtab active" data-pane="province">Province</button>
+      <button class="dtab" data-pane="chronicle">Chronicle</button>
+      <button class="dtab" data-pane="company">Company</button>
+    </div>
+
+    <div class="dpane active" id="pane-province">
+      <h3 class="sect">Provinces</h3>
+      <div id="provlist"></div>
+      <button class="tbtn wide" id="newProvBtn">+ Found a New Province</button>
+
+      <div id="dossier" style="display:none">
+        <h3 class="sect">Dossier</h3>
+        <div class="frow">
+          <div class="field" style="flex:2"><label>Province</label><input type="text" id="d_name"></div>
+          <div class="field" style="flex:0 0 52px"><label>Color</label><input type="color" id="d_color" style="width:100%;height:29px;background:#151A15;border:1px solid var(--edge);border-radius:3px;padding:1px"></div>
+        </div>
+        <div class="frow">
+          <div class="field" style="flex:2"><label>Ruler</label><input type="text" id="d_ruler"></div>
+          <div class="field" style="flex:1"><label>Level</label><input type="number" id="d_level" min="0" max="10" value="0"></div>
+        </div>
+        <div class="field"><label>Holdings</label><textarea id="d_holdings" placeholder="Law: … / Temple: … / Guild: … / Source: …"></textarea></div>
+        <div class="field"><label>Notes</label><textarea id="d_notes" placeholder="Roads, castles, oaths, dooms…"></textarea></div>
+        <div id="stampline"></div>
+        <button class="tbtn wide danger" id="delProvBtn">Release province to the mist</button>
+      </div>
+
+      <div id="hexcard" style="display:none">
+        <h3 class="sect">Hex</h3>
+        <div id="hexinfo"></div>
+      </div>
+    </div>
+
+    <div class="dpane" id="pane-company">
+      <div id="net-solo">
+        <h3 class="sect">Gather the Company</h3>
+        <p style="font-size:12.5px;font-style:italic;color:var(--ink-dim);line-height:1.6;margin-bottom:10px">
+          Host a live session and give the code to your regents. Each may found and grow their own
+          province while all watch the mist retreat. Live sessions need an internet connection.</p>
+        <div class="field"><label>Your name</label><input type="text" id="net_name" value="Game Master"></div>
+        <button class="tbtn wide" id="hostBtn">Host a session</button>
+        <div style="height:12px"></div>
+        <div class="field"><label>Session code</label><input type="text" id="net_code" placeholder="MIST-XXXX" style="text-transform:uppercase;font-family:var(--mono)"></div>
+        <button class="tbtn wide" id="joinBtn">Join a session</button>
+        <div id="net_msg" style="font-size:12px;font-style:italic;color:#c98a7a;margin-top:8px"></div>
+      </div>
+      <div id="net-live" style="display:none">
+        <h3 class="sect">The Company</h3>
+        <div style="text-align:center;margin-bottom:10px">
+          <div style="font-size:10px;letter-spacing:.16em;color:var(--ink-dim);text-transform:uppercase">Session code</div>
+          <div id="net_showcode" style="font-family:var(--mono);font-size:22px;color:var(--gold-hi);letter-spacing:.1em">—</div>
+        </div>
+        <div id="playerlist"></div>
+        <div class="field" id="permwrap" style="margin-top:10px">
+          <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:12.5px;letter-spacing:0;color:var(--ink)">
+            <input type="checkbox" id="permOwn" checked style="width:15px;height:15px"> Regents may only shape their own provinces
+          </label>
+        </div>
+        <button class="tbtn wide danger" id="leaveBtn" style="margin-top:10px">Leave the session</button>
+      </div>
+    </div>
+
+    <div class="dpane" id="pane-chronicle">
+      <h3 class="sect">Chronicle of the Reclamation</h3>
+      <button class="tbtn wide" id="replayBtn">▷ Replay the reclamation</button>
+      <div style="height:10px"></div>
+      <div id="chronlist"><div id="chron-empty">No land has yet been called out of the mist.
+        The Chronicle waits for the first candle.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+function showErr(e){
+  try{
+    const bar=document.getElementById("errbar");
+    bar.textContent="Error: "+(e&&e.message?e.message:e);
+    bar.style.display="block";
+    clearTimeout(showErr._t); showErr._t=setTimeout(()=>bar.style.display="none",12000);
+  }catch(_){}
+}
+addEventListener("error",e=>showErr(e.error||e.message));
+addEventListener("unhandledrejection",e=>showErr(e.reason));
+/* ═══════════════ CONSTANTS ═══════════════ */
+const COLS=46, ROWS=34, HEX=26;
+const SQ3=Math.sqrt(3);
+const WORLD_W=Math.ceil(HEX*SQ3*(COLS+1)), WORLD_H=Math.ceil(HEX*1.5*(ROWS+1)+HEX);
+const SEASONS=["Spring","Summer","Autumn","Winter"];
+const TERR={
+  plains:   {fill:"#D3C393", name:"Plains"},
+  farmland: {fill:"#C9B478", name:"Farmland"},
+  forest:   {fill:"#9AA878", name:"Forest"},
+  hills:    {fill:"#BCA678", name:"Hills"},
+  mountains:{fill:"#A79A85", name:"Mountains"},
+  swamp:    {fill:"#939A7C", name:"Swamp"},
+  water:    {fill:"#7E99A8", name:"Water"}
+};
+const SITES={city:"City",town:"Town",village:"Village",castle:"Castle",ruin:"Ruin",stone:"Standing Stone",source:"Ley Source"};
+const PROV_COLORS=["#8A3030","#3E5F7E","#6B7C3A","#7A5290","#9C6A2E","#3E7E6C","#984A66","#5A6E9C","#7E7433","#6E4632"];
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ═══════════════ STATE ═══════════════ */
+let state = {
+  camp:"The Reclaimed Lands", season:"Spring", year:551,
+  hexes:{},            // "c,r" -> {terr, prov, s, y, roads:[dirs], rivers:[dirs], site:{t,name}}
+  provinces:{},        // id -> {name, ruler, level, holdings, notes, color}
+  order:[],            // province id order
+  nextId:1, frontierRule:true
+};
+let activeProv=null, tool="inspect", curTerr="plains", curSite="village";
+let selHex=null;
+let view={s:1.15, tx:0, ty:0};
+let replaying=false, replayVisible=null;
+
+/* ═══════════════ HEX MATH (odd-r pointy-top offset) ═══════════════ */
+const key=(c,r)=>c+","+r;
+function center(c,r){ return {x:HEX*SQ3*(c+0.5*(r&1))+HEX, y:HEX*1.5*r+HEX}; }
+function inBounds(c,r){ return c>=0&&c<COLS&&r>=0&&r<ROWS; }
+const NB_EVEN=[[1,0],[-1,0],[0,-1],[-1,-1],[0,1],[-1,1]];
+const NB_ODD =[[1,0],[-1,0],[1,-1],[0,-1],[1,1],[0,1]];
+function neighbors(c,r){
+  const tbl=(r&1)?NB_ODD:NB_EVEN;
+  return tbl.map(d=>[c+d[0],r+d[1]]).filter(p=>inBounds(p[0],p[1]));
+}
+function pixelToHex(px,py){
+  let best=null,bd=1e9;
+  const rGuess=Math.round((py-HEX)/(HEX*1.5));
+  for(let r=rGuess-1;r<=rGuess+1;r++){
+    if(r<0||r>=ROWS)continue;
+    const cGuess=Math.round((px-HEX)/(HEX*SQ3)-0.5*(r&1));
+    for(let c=cGuess-1;c<=cGuess+1;c++){
+      if(c<0||c>=COLS)continue;
+      const p=center(c,r), d=(p.x-px)**2+(p.y-py)**2;
+      if(d<bd){bd=d;best=[c,r];}
+    }
+  }
+  return (best&&bd<=(HEX*1.05)**2)?best:null;
+}
+function hexPath(ctx,x,y,rad){
+  ctx.beginPath();
+  for(let i=0;i<6;i++){
+    const a=Math.PI/180*(60*i-90);
+    const px=x+rad*Math.cos(a), py=y+rad*Math.sin(a);
+    i?ctx.lineTo(px,py):ctx.moveTo(px,py);
+  }
+  ctx.closePath();
+}
+/* edge i of hex = between corner i and i+1; matching neighbor per edge (pointy-top, corners from top cw) */
+function edgeNeighbor(c,r,i){
+  // corners: 0 top,1 NE,2 SE,3 bottom,4 SW,5 NW ; edges: 0=NE side,1=E,2=SE,3=SW,4=W,5=NW
+  const odd=r&1;
+  const map=[
+    odd?[1,-1]:[0,-1],  // NE
+    [1,0],              // E
+    odd?[1,1]:[0,1],    // SE
+    odd?[0,1]:[-1,1],   // SW
+    [-1,0],             // W
+    odd?[0,-1]:[-1,-1]  // NW
+  ];
+  return [c+map[i][0], r+map[i][1]];
+}
+function dirBetween(c1,r1,c2,r2){ // edge index from hex1 toward hex2, or -1
+  for(let i=0;i<6;i++){const n=edgeNeighbor(c1,r1,i); if(n[0]===c2&&n[1]===r2)return i;}
+  return -1;
+}
+
+/* ═══════════════ CANVAS SETUP ═══════════════ */
+const cv=document.getElementById("map"), ctx=cv.getContext("2d");
+const fogTile=document.createElement("canvas");
+const landMask=document.createElement("canvas");
+landMask.width=WORLD_W; landMask.height=WORLD_H;
+let maskDirty=true;
+
+function buildFogTile(){
+  fogTile.width=512; fogTile.height=512;
+  const f=fogTile.getContext("2d");
+  f.clearRect(0,0,512,512);
+  let seed=7;
+  const rnd=()=> (seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<30;i++){
+    const x=rnd()*512, y=rnd()*512, rad=40+rnd()*90, a=0.05+rnd()*0.11;
+    for(const dx of[-512,0,512])for(const dy of[-512,0,512]){
+      const g=f.createRadialGradient(x+dx,y+dy,0,x+dx,y+dy,rad);
+      g.addColorStop(0,`rgba(238,240,236,${a})`);
+      g.addColorStop(1,"rgba(238,240,236,0)");
+      f.fillStyle=g; f.beginPath(); f.arc(x+dx,y+dy,rad,0,7); f.fill();
+    }
+  }
+}
+buildFogTile();
+
+function rebuildMask(){
+  const m=landMask.getContext("2d");
+  m.setTransform(1,0,0,1,0,0);
+  m.clearRect(0,0,WORLD_W,WORLD_H);
+  const tmp=document.createElement("canvas");
+  tmp.width=WORLD_W; tmp.height=WORLD_H;
+  const t=tmp.getContext("2d");
+  t.fillStyle="#fff";
+  const set=replayVisible||state.hexes;
+  for(const k in set){ if(replayVisible&&!replayVisible[k])continue;
+    const [c,r]=k.split(",").map(Number);
+    const p=center(c,r);
+    hexPath(t,p.x,p.y,HEX+1.5); t.fill();
+  }
+  m.filter="blur(15px)";
+  m.drawImage(tmp,0,0);
+  m.filter="none";
+  // second solid pass keeps land fully clear at the core
+  m.drawImage(tmp,0,0);
+  maskDirty=false;
+}
+
+function resize(){
+  cv.width=cv.clientWidth*devicePixelRatio;
+  cv.height=cv.clientHeight*devicePixelRatio;
+}
+addEventListener("resize",resize);
+if(window.ResizeObserver){ new ResizeObserver(resize).observe(cv); }
+
+/* ═══════════════ DRAW ═══════════════ */
+function terrGlyphs(c,r,x,y,terr){
+  ctx.strokeStyle="rgba(60,52,38,.55)"; ctx.lineWidth=1.1; ctx.fillStyle="rgba(60,52,38,.5)";
+  const j=((c*73+r*131)%7)-3;
+  if(terr==="forest"){
+    for(const[dx,dy]of[[-7,3],[2,-4+j*0.4],[8,5]]){
+      ctx.beginPath(); ctx.moveTo(x+dx,y+dy+4); ctx.lineTo(x+dx+4,y+dy+4);
+      ctx.lineTo(x+dx+2,y+dy-4); ctx.closePath(); ctx.fill();
+    }
+  } else if(terr==="mountains"){
+    ctx.beginPath(); ctx.moveTo(x-10,y+7); ctx.lineTo(x-3,y-6); ctx.lineTo(x+2,y+3);
+    ctx.moveTo(x-1,y+7); ctx.lineTo(x+6,y-3+j*0.4); ctx.lineTo(x+11,y+7); ctx.stroke();
+  } else if(terr==="hills"){
+    ctx.beginPath(); ctx.arc(x-6,y+4,5,Math.PI,0); ctx.moveTo(x+11,y+6); ctx.arc(x+6,y+6,5,0,Math.PI,true); ctx.stroke();
+  } else if(terr==="swamp"){
+    ctx.beginPath();
+    for(const[dx,dy]of[[-8,2],[0,6],[7,1]]){ ctx.moveTo(x+dx-3,y+dy); ctx.lineTo(x+dx+3,y+dy);
+      ctx.moveTo(x+dx,y+dy); ctx.lineTo(x+dx,y+dy-5);}
+    ctx.stroke();
+  } else if(terr==="water"){
+    ctx.beginPath();
+    for(const dy of[-3,3]){ ctx.moveTo(x-9,y+dy); ctx.quadraticCurveTo(x-4,y+dy-3,x,y+dy);
+      ctx.quadraticCurveTo(x+4,y+dy+3,x+9,y+dy);}
+    ctx.stroke();
+  } else if(terr==="farmland"){
+    ctx.beginPath();
+    for(let i=-2;i<=2;i++){ ctx.moveTo(x-9,y+i*3.4); ctx.lineTo(x+9,y+i*3.4);}
+    ctx.strokeStyle="rgba(60,52,38,.3)"; ctx.stroke();
+  } else { // plains
+    ctx.beginPath();
+    for(const[dx,dy]of[[-6,3],[5,-2]]){ ctx.moveTo(x+dx,y+dy+2); ctx.lineTo(x+dx-2,y+dy-2);
+      ctx.moveTo(x+dx,y+dy+2); ctx.lineTo(x+dx+2,y+dy-2);}
+    ctx.strokeStyle="rgba(60,52,38,.32)"; ctx.stroke();
+  }
+}
+function siteGlyph(g,x,y,t){
+  const ctx=g;
+  ctx.save();
+  ctx.strokeStyle="#2E2618"; ctx.fillStyle="#F1E7CB"; ctx.lineWidth=1.6;
+  if(t==="city"){ ctx.fillRect(x-9,y-4,18,10); ctx.strokeRect(x-9,y-4,18,10);
+    for(const dx of[-9,-2,5]){ ctx.fillRect(x+dx,y-10,4,7); ctx.strokeRect(x+dx,y-10,4,7);}}
+  else if(t==="town"){ ctx.fillRect(x-7,y-3,14,9); ctx.strokeRect(x-7,y-3,14,9);
+    ctx.beginPath(); ctx.moveTo(x-8,y-3); ctx.lineTo(x,y-10); ctx.lineTo(x+8,y-3); ctx.closePath(); ctx.fill(); ctx.stroke();}
+  else if(t==="village"){ ctx.fillRect(x-5,y-2,10,7); ctx.strokeRect(x-5,y-2,10,7);
+    ctx.beginPath(); ctx.moveTo(x-6,y-2); ctx.lineTo(x,y-8); ctx.lineTo(x+6,y-2); ctx.closePath(); ctx.fill(); ctx.stroke();}
+  else if(t==="castle"){ ctx.fillRect(x-8,y-6,16,12); ctx.strokeRect(x-8,y-6,16,12);
+    ctx.beginPath(); for(const dx of[-8,-3,2,7]){ctx.rect(x+dx,y-9,3,3);} ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x,y-9); ctx.lineTo(x,y-15); ctx.lineTo(x+6,y-13); ctx.lineTo(x,y-11); ctx.stroke();}
+  else if(t==="ruin"){ ctx.beginPath(); ctx.moveTo(x-8,y+5); ctx.lineTo(x-8,y-4); ctx.moveTo(x-3,y+5); ctx.lineTo(x-3,y-7);
+    ctx.moveTo(x+2,y+5); ctx.lineTo(x+2,y-2); ctx.moveTo(x+7,y+5); ctx.lineTo(x+7,y-6);
+    ctx.moveTo(x-10,y+5); ctx.lineTo(x+10,y+5); ctx.stroke();}
+  else if(t==="stone"){ ctx.beginPath(); ctx.moveTo(x-4,y+6); ctx.lineTo(x-3,y-7); ctx.lineTo(x+3,y-8);
+    ctx.lineTo(x+4,y+6); ctx.closePath(); ctx.fill(); ctx.stroke();}
+  else if(t==="source"){ ctx.beginPath();
+    for(let a=0;a<Math.PI*4.6;a+=0.3){ const rr=1+a*1.15, px=x+rr*Math.cos(a), py=y+rr*Math.sin(a);
+      a?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.stroke();}
+  ctx.restore();
+}
+
+let fogT=0;
+const fogCv=document.createElement("canvas");
+function draw(ts){
+  try{ drawFrame(ts); }
+  catch(err){ showErr(err); }
+  requestAnimationFrame(draw);
+}
+function drawFrame(ts){
+  if(!reduceMotion) fogT=(ts||0)/1000;
+  const W=cv.width,H=cv.height;
+  if(W<2||H<2){ resize(); return; }
+  if(maskDirty) rebuildMask();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle="#151A16"; ctx.fillRect(0,0,W,H);
+  const sc=view.s*devicePixelRatio;
+  ctx.setTransform(sc,0,0,sc,view.tx*devicePixelRatio,view.ty*devicePixelRatio);
+
+  const visSet=replayVisible||state.hexes;
+  /* land */
+  for(const k in state.hexes){
+    if(replayVisible&&!replayVisible[k])continue;
+    const h=state.hexes[k], [c,r]=k.split(",").map(Number), p=center(c,r);
+    hexPath(ctx,p.x,p.y,HEX+0.6);
+    ctx.fillStyle=(TERR[h.terr]||TERR.plains).fill; ctx.fill();
+    const prov=state.provinces[h.prov];
+    if(prov){ ctx.fillStyle=prov.color+"1E"; ctx.fill(); }
+    ctx.strokeStyle="rgba(70,60,42,.28)"; ctx.lineWidth=1; ctx.stroke();
+    terrGlyphs(c,r,p.x,p.y,h.terr);
+  }
+  /* rivers then roads */
+  ctx.lineCap="round";
+  for(const pass of["rivers","roads"]){
+    for(const k in state.hexes){
+      if(replayVisible&&!replayVisible[k])continue;
+      const h=state.hexes[k]; if(!h[pass]||!h[pass].length)continue;
+      const [c,r]=k.split(",").map(Number), p=center(c,r);
+      for(const d of h[pass]){
+        const n=edgeNeighbor(c,r,d), np=center(n[0],n[1]);
+        const mx=(p.x+np.x)/2,my=(p.y+np.y)/2;
+        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mx,my);
+        if(pass==="rivers"){ ctx.strokeStyle="#5D7E8E"; ctx.lineWidth=3.4; ctx.setLineDash([]); }
+        else { ctx.strokeStyle="#6E5433"; ctx.lineWidth=2; ctx.setLineDash([5,4]); }
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.setLineDash([]);
+  /* province borders */
+  for(const k in state.hexes){
+    if(replayVisible&&!replayVisible[k])continue;
+    const h=state.hexes[k], [c,r]=k.split(",").map(Number), p=center(c,r);
+    const prov=state.provinces[h.prov]; if(!prov)continue;
+    for(let i=0;i<6;i++){
+      const n=edgeNeighbor(c,r,i), nk=key(n[0],n[1]);
+      const nh=(inBounds(n[0],n[1])&&(!replayVisible||replayVisible[nk]))?state.hexes[nk]:null;
+      if(nh&&nh.prov===h.prov)continue;
+      const a1=Math.PI/180*(60*i-90), a2=Math.PI/180*(60*(i+1)-90);
+      ctx.beginPath();
+      ctx.moveTo(p.x+HEX*Math.cos(a1),p.y+HEX*Math.sin(a1));
+      ctx.lineTo(p.x+HEX*Math.cos(a2),p.y+HEX*Math.sin(a2));
+      ctx.strokeStyle="rgba(30,24,16,.8)"; ctx.lineWidth=4; ctx.stroke();
+      ctx.strokeStyle=prov.color; ctx.lineWidth=2.2; ctx.stroke();
+    }
+  }
+  /* sites + names */
+  ctx.textAlign="center";
+  for(const k in state.hexes){
+    if(replayVisible&&!replayVisible[k])continue;
+    const h=state.hexes[k]; if(!h.site)continue;
+    const [c,r]=k.split(",").map(Number), p=center(c,r);
+    siteGlyph(ctx,p.x,p.y,h.site.t);
+    if(h.site.name){
+      ctx.font="10.5px Palatino Linotype, Georgia, serif";
+      ctx.lineWidth=3; ctx.strokeStyle="rgba(235,225,195,.85)";
+      ctx.strokeText(h.site.name,p.x,p.y+HEX*0.72);
+      ctx.fillStyle="#33291A"; ctx.fillText(h.site.name,p.x,p.y+HEX*0.72);
+    }
+  }
+  /* province labels at centroid */
+  for(const id of state.order){
+    const prov=state.provinces[id]; if(!prov)continue;
+    let sx=0,sy=0,n=0;
+    for(const k in state.hexes){ const h=state.hexes[k];
+      if(h.prov!==id)continue; if(replayVisible&&!replayVisible[k])continue;
+      const [c,r]=k.split(",").map(Number),p=center(c,r); sx+=p.x;sy+=p.y;n++; }
+    if(!n)continue;
+    const x=sx/n,y=sy/n;
+    ctx.font="700 15px Palatino Linotype, Georgia, serif";
+    const label=prov.name.toUpperCase();
+    ctx.lineWidth=4; ctx.strokeStyle="rgba(238,228,198,.75)";
+    ctx.strokeText(label,x,y-2);
+    ctx.fillStyle="#4A3A1C"; ctx.fillText(label,x,y-2);
+    ctx.font="10px Palatino Linotype, Georgia, serif";
+    ctx.fillStyle="rgba(74,58,28,.75)";
+    ctx.fillText("province "+(prov.level||0),x,y+11);
+  }
+
+  /* ── FOG ── */
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  if(fogCv.width!==W||fogCv.height!==H){fogCv.width=W;fogCv.height=H;}
+  const f=fogCv.getContext("2d");
+  f.setTransform(1,0,0,1,0,0);
+  f.globalCompositeOperation="source-over";
+  f.clearRect(0,0,W,H);
+  f.fillStyle="rgba(196,201,195,0.97)"; f.fillRect(0,0,W,H);
+  const pat=f.createPattern(fogTile,"repeat");
+  for(const [spd,dir,al] of [[14,1,0.9],[8,-1,0.7]]){
+    f.save(); f.globalAlpha=al;
+    const off=fogT*spd*devicePixelRatio;
+    f.translate(((off*dir)+view.tx*0.25*devicePixelRatio)%512, ((off*0.6)+view.ty*0.25*devicePixelRatio)%512);
+    f.fillStyle=pat; f.fillRect(-512,-512,W+1024,H+1024);
+    f.restore();
+  }
+  f.globalCompositeOperation="destination-out";
+  f.setTransform(sc,0,0,sc,view.tx*devicePixelRatio,view.ty*devicePixelRatio);
+  f.drawImage(landMask,0,0);
+  ctx.drawImage(fogCv,0,0);
+  ctx.restore();
+
+  /* frontier ghost grid + hover glow (over fog) */
+  ctx.setTransform(sc,0,0,sc,view.tx*devicePixelRatio,view.ty*devicePixelRatio);
+  if(tool==="claim"&&!replaying){
+    const frontier={};
+    if(Object.keys(state.hexes).length===0){
+      // nothing claimed: no ghost ring; hover glow handles aim
+    } else {
+      for(const k in state.hexes){
+        const [c,r]=k.split(",").map(Number);
+        for(const [nc,nr] of neighbors(c,r)){
+          const nk=key(nc,nr);
+          if(!state.hexes[nk]) frontier[nk]=1;
+        }
+      }
+    }
+    ctx.strokeStyle="rgba(210,172,85,.28)"; ctx.lineWidth=1;
+    for(const k in frontier){
+      const [c,r]=k.split(",").map(Number),p=center(c,r);
+      hexPath(ctx,p.x,p.y,HEX-2); ctx.stroke();
+    }
+  }
+  if(hoverHex&&!replaying){
+    const [c,r]=hoverHex,p=center(c,r);
+    const claimed=!!state.hexes[key(c,r)];
+    if(tool==="claim"&&!claimed){
+      ctx.shadowColor="rgba(255,196,110,.9)"; ctx.shadowBlur=14;
+      ctx.strokeStyle="rgba(255,206,130,.95)"; ctx.lineWidth=2;
+      hexPath(ctx,p.x,p.y,HEX-2); ctx.stroke();
+      ctx.shadowBlur=0;
+    } else {
+      ctx.strokeStyle="rgba(240,230,200,.8)"; ctx.lineWidth=1.6;
+      hexPath(ctx,p.x,p.y,HEX-1.5); ctx.stroke();
+    }
+  }
+  /* companion cursors */
+  const nowc=Date.now();
+  for(const id in NET.cursors){
+    const cur=NET.cursors[id];
+    if(nowc-cur.ts>6000){delete NET.cursors[id];continue;}
+    ctx.beginPath(); ctx.arc(cur.x,cur.y,4.5,0,7);
+    ctx.fillStyle=cur.color||"#D2AC55"; ctx.fill();
+    ctx.strokeStyle="rgba(20,24,20,.8)"; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.font="10px Palatino Linotype, Georgia, serif"; ctx.textAlign="left";
+    ctx.fillStyle="rgba(240,232,208,.95)";
+    ctx.fillText(cur.name||"",cur.x+8,cur.y+3);
+    ctx.textAlign="center";
+  }
+  if(selHex&&state.hexes[key(selHex[0],selHex[1])]){
+    const p=center(selHex[0],selHex[1]);
+    ctx.strokeStyle="#D2AC55"; ctx.lineWidth=2.4;
+    hexPath(ctx,p.x,p.y,HEX-1); ctx.stroke();
+  }
+}
+
+/* ═══════════════ NETWORK (PeerJS, loaded on demand) ═══════════════ */
+const NET={mode:"solo",peer:null,conns:{},hostConn:null,myId:"host",myName:"Game Master",
+  players:{},cursors:{},permOwn:true,_bt:null};
+function loadPeerJS(){
+  return new Promise((res,rej)=>{
+    if(window.Peer)return res();
+    const s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js";
+    s.onload=()=>res(); s.onerror=()=>rej(new Error("offline"));
+    document.head.appendChild(s);
+  });
+}
+function netMsg(t){document.getElementById("net_msg").textContent=t;}
+function makeCode(){const A="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let c="";for(let i=0;i<4;i++)c+=A[Math.floor(Math.random()*A.length)];return "MIST-"+c;}
+function hostSession(){
+  NET.myName=document.getElementById("net_name").value.trim()||"Game Master";
+  netMsg("Reaching through the mist…");
+  loadPeerJS().then(()=>{
+    const code=makeCode();
+    NET.peer=new Peer(code);
+    NET.peer.on("open",()=>{
+      NET.mode="host"; NET.myId="host";
+      NET.players={host:{name:NET.myName,color:"#D2AC55"}};
+      liveUI(code); netMsg("");
+      hint("The session is open. Give your regents the code: "+code);
+    });
+    NET.peer.on("connection",conn=>{
+      conn.on("open",()=>{ NET.conns[conn.peer]=conn; });
+      conn.on("data",m=>handleClientData(conn,m));
+      conn.on("close",()=>{ delete NET.conns[conn.peer]; delete NET.players[conn.peer];
+        delete NET.cursors[conn.peer]; broadcast({t:"players",players:NET.players}); refreshPlayers(); });
+    });
+    NET.peer.on("error",e=>{netMsg("Session error: "+e.type); leaveSession();});
+  }).catch(()=>netMsg("Live sessions need an internet connection."));
+}
+function joinSession(){
+  const code=(document.getElementById("net_code").value.trim()||"").toUpperCase();
+  if(!code)return netMsg("Enter the session code.");
+  NET.myName=document.getElementById("net_name").value.trim()||"A Regent";
+  netMsg("Walking into the mist…");
+  loadPeerJS().then(()=>{
+    NET.peer=new Peer();
+    NET.peer.on("open",id=>{
+      NET.myId=id;
+      const conn=NET.peer.connect(code,{reliable:true});
+      NET.hostConn=conn;
+      conn.on("open",()=>{ NET.mode="client"; conn.send({t:"hello",name:NET.myName});
+        liveUI(code); netMsg(""); hint("You have joined the company. Found a province and claim your land."); });
+      conn.on("data",m=>handleHostData(m));
+      conn.on("close",()=>{ hint("The session has ended."); leaveSession(); });
+      setTimeout(()=>{ if(NET.mode!=="client"){netMsg("No session answered to that code."); try{NET.peer.destroy();}catch(_){}}},9000);
+    });
+    NET.peer.on("error",e=>netMsg("Could not join: "+e.type));
+  }).catch(()=>netMsg("Live sessions need an internet connection."));
+}
+function leaveSession(){
+  try{ if(NET.peer)NET.peer.destroy(); }catch(_){}
+  NET.mode="solo"; NET.peer=null; NET.conns={}; NET.hostConn=null;
+  NET.players={}; NET.cursors={};
+  document.getElementById("net-live").style.display="none";
+  document.getElementById("net-solo").style.display="block";
+}
+function liveUI(code){
+  document.getElementById("net-solo").style.display="none";
+  document.getElementById("net-live").style.display="block";
+  document.getElementById("net_showcode").textContent=code;
+  document.getElementById("permwrap").style.display=NET.mode==="host"?"block":"none";
+  refreshPlayers(); showPane("company");
+}
+function refreshPlayers(){
+  const el=document.getElementById("playerlist"); if(!el)return;
+  el.innerHTML=Object.entries(NET.players).map(([id,p])=>{
+    const provs=state.order.filter(x=>state.provinces[x].owner===id)
+      .map(x=>esc(state.provinces[x].name)).join(", ")||"<i>no province yet</i>";
+    return `<div class="provrow" style="cursor:default"><span class="pchip" style="background:${p.color}"></span>
+      <span class="pname">${esc(p.name)}${id===NET.myId||((id==="host")&&NET.mode==="host")?" (you)":""}</span></div>
+      <div style="font-size:11px;color:var(--ink-dim);margin:-2px 0 6px 21px">${provs}</div>`;
+  }).join("");
+}
+function broadcast(m){ for(const id in NET.conns){ try{NET.conns[id].send(m);}catch(_){}} }
+function broadcastState(){
+  if(NET.mode!=="host")return;
+  clearTimeout(NET._bt);
+  NET._bt=setTimeout(()=>broadcast({t:"state",state:JSON.parse(serialize()),players:NET.players}),120);
+}
+function ownerOf(provId){ const p=state.provinces[provId]; return p?(p.owner||"host"):null; }
+function permitted(senderId,a){
+  if(!NET.permOwn)return true;
+  const provOf=(c,r)=>{const hx=state.hexes[key(c,r)];return hx?hx.prov:null;};
+  let pid=null;
+  if(a.t==="claim")pid=a.prov;
+  else if(a.t==="newprov")return true;
+  else if(a.t==="prov"||a.t==="delprov")pid=a.id;
+  else if(a.c!==undefined)pid=provOf(a.c,a.r);
+  else if(a.t==="path")pid=provOf(a.c1,a.r1);
+  else if(a.t==="sitename"){const hx=state.hexes[a.k];pid=hx?hx.prov:null;}
+  if(pid===null)return true;
+  return ownerOf(pid)===senderId;
+}
+function handleClientData(conn,m){
+  if(!m||!m.t)return;
+  if(m.t==="hello"){
+    const color=PROV_COLORS[(Object.keys(NET.players).length)%PROV_COLORS.length];
+    NET.players[conn.peer]={name:String(m.name||"A Regent").slice(0,40),color};
+    conn.send({t:"state",state:JSON.parse(serialize()),players:NET.players});
+    broadcast({t:"players",players:NET.players});
+    refreshPlayers();
+  } else if(m.t==="act"){
+    if(!permitted(conn.peer,m.a)){
+      try{conn.send({t:"deny",msg:"That land answers to another regent."});}catch(_){}
+      broadcastState(); return;
+    }
+    applyAction(m.a,conn.peer);
+    broadcastState();
+  } else if(m.t==="cursor"){
+    const p=NET.players[conn.peer]||{};
+    NET.cursors[conn.peer]={x:m.x,y:m.y,name:p.name,color:p.color,ts:Date.now()};
+    broadcast({t:"cursor",id:conn.peer,x:m.x,y:m.y,name:p.name,color:p.color});
+  }
+}
+function handleHostData(m){
+  if(!m||!m.t)return;
+  if(m.t==="state"){
+    NET.players=m.players||NET.players;
+    const keepProv=activeProv;
+    restore(m.state);
+    if(keepProv&&state.provinces[keepProv])activeProv=keepProv;
+    else activeProv=state.order.find(id=>state.provinces[id].owner===NET.myId)||null;
+    refreshProvList(); refreshPlayers();
+    if(activeProv)openDossierQuiet(activeProv);
+  } else if(m.t==="players"){ NET.players=m.players; refreshPlayers(); }
+  else if(m.t==="deny"){ hint(m.msg||"The host refused that act."); }
+  else if(m.t==="cursor"){ if(m.id!==NET.myId)NET.cursors[m.id]={x:m.x,y:m.y,name:m.name,color:m.color,ts:Date.now()}; }
+}
+document.getElementById("hostBtn").onclick=hostSession;
+document.getElementById("joinBtn").onclick=joinSession;
+document.getElementById("leaveBtn").onclick=leaveSession;
+document.getElementById("permOwn").addEventListener("change",e=>{NET.permOwn=e.target.checked;});
+
+/* every mutation flows through act() → applyAction() */
+function act(a){
+  if(NET.mode==="client"){
+    applyAction(a,NET.myId);           // optimistic; host state overwrites shortly
+    try{NET.hostConn.send({t:"act",a});}catch(_){}
+  } else {
+    applyAction(a,"host");
+    broadcastState();
+  }
+}
+function applyAction(a,actor){
+  switch(a.t){
+    case "claim":{
+      const k=key(a.c,a.r);
+      if(state.hexes[k]||!state.provinces[a.prov])return;
+      if(state.frontierRule&&Object.keys(state.hexes).length>0){
+        if(!neighbors(a.c,a.r).some(([nc,nr])=>state.hexes[key(nc,nr)]))return;
+      }
+      state.hexes[k]={terr:a.terr||"plains",prov:a.prov,s:a.s,y:a.y,roads:[],rivers:[],site:null};
+      maskDirty=true; break;
+    }
+    case "release":{
+      const k=key(a.c,a.r); if(!state.hexes[k])return;
+      delete state.hexes[k];
+      for(const [nc,nr] of neighbors(a.c,a.r)){
+        const nh=state.hexes[key(nc,nr)]; if(!nh)continue;
+        const d=dirBetween(nc,nr,a.c,a.r);
+        nh.roads=nh.roads.filter(x=>x!==d); nh.rivers=nh.rivers.filter(x=>x!==d);
+      }
+      maskDirty=true; break;
+    }
+    case "terr":{ const hx=state.hexes[key(a.c,a.r)]; if(hx)hx.terr=a.terr; break; }
+    case "path":{
+      const h1=state.hexes[key(a.c1,a.r1)],h2=state.hexes[key(a.c2,a.r2)];
+      if(!h1||!h2)return;
+      const d12=dirBetween(a.c1,a.r1,a.c2,a.r2); if(d12<0)return;
+      const d21=dirBetween(a.c2,a.r2,a.c1,a.r1);
+      if(!h1[a.kind].includes(d12))h1[a.kind].push(d12);
+      if(!h2[a.kind].includes(d21))h2[a.kind].push(d21);
+      break;
+    }
+    case "erasepath":{
+      const hx=state.hexes[key(a.c,a.r)]; if(!hx)return;
+      for(const [nc,nr] of neighbors(a.c,a.r)){
+        const nh=state.hexes[key(nc,nr)]; if(!nh)continue;
+        const d=dirBetween(nc,nr,a.c,a.r);
+        nh.roads=nh.roads.filter(x=>x!==d); nh.rivers=nh.rivers.filter(x=>x!==d);
+      }
+      hx.roads=[];hx.rivers=[]; break;
+    }
+    case "site":{ const hx=state.hexes[key(a.c,a.r)]; if(hx)hx.site=a.site; break; }
+    case "sitename":{ const hx=state.hexes[a.k]; if(hx&&hx.site)hx.site.name=a.name; break; }
+    case "newprov":{
+      const who=NET.players[actor];
+      const ownerName=who?who.name:(actor===NET.myId?NET.myName:(actor==="host"?NET.myName:"A Regent"));
+      const ownerColor=who?who.color:"#D2AC55";
+      state.provinces[a.id]={name:a.name,ruler:"",level:0,holdings:"",notes:"",color:a.color,
+        owner:actor,ownerName,ownerColor};
+      state.order.push(a.id); break;
+    }
+    case "prov":{ const p=state.provinces[a.id]; if(p)p[a.prop]= a.prop==="level"?(parseInt(a.val)||0):a.val; break; }
+    case "delprov":{
+      for(const k of Object.keys(state.hexes)) if(state.hexes[k].prov===a.id) delete state.hexes[k];
+      delete state.provinces[a.id];
+      state.order=state.order.filter(x=>x!==a.id);
+      if(activeProv===a.id)activeProv=state.order[0]||null;
+      maskDirty=true; break;
+    }
+    case "season":{ state.season=a.season; state.year=a.year; seasonLabel(); break; }
+    case "camp":{ state.camp=a.v; if(document.activeElement.id!=="campname")document.getElementById("campname").value=a.v; break; }
+  }
+  refreshProvList(); renderChronicle(); saveLocal();
+}
+
+/* ═══════════════ EDIT OPERATIONS ═══════════════ */
+function claimHex(c,r){
+  const k=key(c,r);
+  if(state.hexes[k])return;
+  if(!activeProv){ hint("Found a province first — the mist yields only to a named regent."); return; }
+  if(NET.mode!=="solo"&&NET.permOwn&&ownerOf(activeProv)!==(NET.mode==="host"?"host":NET.myId)){
+    hint("That province answers to another regent."); return;
+  }
+  if(state.frontierRule && Object.keys(state.hexes).length>0){
+    const touches=neighbors(c,r).some(([nc,nr])=>state.hexes[key(nc,nr)]);
+    if(!touches){ hint("The frontier must move outward — claim a hex touching known land."); return; }
+  }
+  act({t:"claim",c,r,prov:activeProv,terr:curTerr==="water"?"plains":curTerr,s:state.season,y:state.year});
+}
+function releaseHex(c,r){
+  if(!state.hexes[key(c,r)])return;
+  if(selHex&&selHex[0]===c&&selHex[1]===r)selHex=null;
+  act({t:"release",c,r});
+}
+function paintTerr(c,r){
+  if(!state.hexes[key(c,r)])return;
+  act({t:"terr",c,r,terr:curTerr});
+}
+function connectPath(kind,c1,r1,c2,r2){
+  if(!state.hexes[key(c1,r1)]||!state.hexes[key(c2,r2)])return;
+  act({t:"path",kind,c1,r1,c2,r2});
+}
+function erasePaths(c,r){
+  if(!state.hexes[key(c,r)])return;
+  act({t:"erasepath",c,r});
+}
+function placeSite(c,r){
+  const h=state.hexes[key(c,r)];
+  if(!h){ hint("Sites can only stand on claimed land."); return; }
+  const keepName=(h.site&&h.site.name)||"";
+  act({t:"site",c,r,site:{t:curSite,name:keepName}});
+  openNameBox(c,r);
+}
+let nameTarget=null;
+function openNameBox(c,r){
+  nameTarget=key(c,r);
+  const p=center(c,r);
+  const sx=p.x*view.s+view.tx, sy=p.y*view.s+view.ty;
+  const box=document.getElementById("namebox");
+  const stage=document.getElementById("stage");
+  box.style.display="block";
+  box.style.left=Math.max(8,Math.min(stage.clientWidth-246, sx+20))+"px";
+  box.style.top =Math.max(8,Math.min(stage.clientHeight-120, sy-20))+"px";
+  document.getElementById("nb_title").textContent="Name this "+SITES[curSite].toLowerCase();
+  const inp=document.getElementById("nb_input");
+  inp.value=(state.hexes[nameTarget].site||{}).name||"";
+  inp.focus(); inp.select();
+}
+function closeNameBox(save){
+  const box=document.getElementById("namebox");
+  if(save&&nameTarget&&state.hexes[nameTarget]&&state.hexes[nameTarget].site){
+    act({t:"sitename",k:nameTarget,name:document.getElementById("nb_input").value.trim()});
+  }
+  box.style.display="none"; nameTarget=null;
+}
+document.getElementById("nb_save").onclick=()=>closeNameBox(true);
+document.getElementById("nb_cancel").onclick=()=>closeNameBox(false);
+document.getElementById("nb_input").addEventListener("keydown",e=>{
+  if(e.key==="Enter")closeNameBox(true);
+  else if(e.key==="Escape")closeNameBox(false);
+  e.stopPropagation();
+});
+function eraseSite(c,r){
+  if(state.hexes[key(c,r)]) act({t:"site",c,r,site:null});
+}
+
+/* ═══════════════ PROVINCES ═══════════════ */
+function newProvince(){
+  const id="p"+Date.now().toString(36)+Math.floor(Math.random()*999);
+  const color=PROV_COLORS[(state.order.length)%PROV_COLORS.length];
+  const name= state.order.length===0 ? "First Light" : "Province "+(state.order.length+1);
+  act({t:"newprov",id,name,color});
+  activeProv=id; setTool("claim");
+  refreshProvList(); openDossier(id);
+  hint("Province founded. Take the candle — click the mist to claim its first hex.");
+}
+let delArmed=null;
+function deleteProvince(id){
+  const btn=document.getElementById("delProvBtn");
+  if(delArmed!==id){
+    delArmed=id;
+    btn.textContent="Are you certain? Click again to release it";
+    clearTimeout(deleteProvince._t);
+    deleteProvince._t=setTimeout(()=>{delArmed=null;btn.textContent="Release province to the mist";},3500);
+    return;
+  }
+  clearTimeout(deleteProvince._t); delArmed=null;
+  btn.textContent="Release province to the mist";
+  act({t:"delprov",id});
+  document.getElementById("dossier").style.display=activeProv?"block":"none";
+  if(activeProv)openDossier(activeProv);
+}
+function provHexCount(id){ let n=0; for(const k in state.hexes)if(state.hexes[k].prov===id)n++; return n; }
+function provFounded(id){
+  let best=null;
+  for(const k in state.hexes){ const h=state.hexes[k]; if(h.prov!==id)continue;
+    const v=h.y*4+SEASONS.indexOf(h.s);
+    if(best===null||v<best.v)best={v,s:h.s,y:h.y};
+  }
+  return best?best.s+" "+best.y+" HC":"—";
+}
+function myActorId(){ return NET.mode==="client"?NET.myId:"host"; }
+function refreshProvList(){
+  const el=document.getElementById("provlist"); el.innerHTML="";
+  for(const id of state.order){
+    const p=state.provinces[id];
+    const mine=(p.owner||"host")===myActorId();
+    const row=document.createElement("div");
+    row.className="provrow"+(id===activeProv?" active":"")+(mine?" mine":"");
+    row.innerHTML=`<span class="pchip" style="background:${p.color}"></span>
+      <span class="pname">${esc(p.name)}</span><span class="pcount">${provHexCount(id)} hx</span>
+      <span class="prowner"><span class="pdot" style="background:${p.ownerColor||"#D2AC55"}"></span>held by ${esc(p.ownerName||"—")}${mine?" (you)":""}</span>`;
+    row.onclick=()=>{activeProv=id; refreshProvList(); openDossier(id);};
+    el.appendChild(row);
+  }
+}
+function openDossierQuiet(id){
+  const p=state.provinces[id]; if(!p)return;
+  d_name.value=p.name; d_ruler.value=p.ruler; d_level.value=p.level;
+  d_holdings.value=p.holdings; d_notes.value=p.notes; d_color.value=p.color;
+  document.getElementById("dossier").style.display="block";
+  document.getElementById("stampline").textContent=
+    "Held by "+(p.ownerName||"—")+" · Founded "+provFounded(id)+" · "+provHexCount(id)+" hexes claimed";
+}
+function openDossier(id){
+  const p=state.provinces[id]; if(!p)return;
+  document.getElementById("hexcard").style.display="none";
+  const d=document.getElementById("dossier"); d.style.display="block";
+  d_name.value=p.name; d_ruler.value=p.ruler; d_level.value=p.level;
+  d_holdings.value=p.holdings; d_notes.value=p.notes; d_color.value=p.color;
+  document.getElementById("stampline").textContent=
+    "Held by "+(p.ownerName||"—")+" · Founded "+provFounded(id)+" · "+provHexCount(id)+" hexes claimed";
+  showPane("province");
+}
+for(const [fid,prop] of [["d_name","name"],["d_ruler","ruler"],["d_level","level"],["d_holdings","holdings"],["d_notes","notes"],["d_color","color"]]){
+  document.getElementById(fid).addEventListener("input",e=>{
+    if(!activeProv)return;
+    act({t:"prov",id:activeProv,prop,val:e.target.value});
+  });
+}
+document.getElementById("newProvBtn").onclick=newProvince;
+document.getElementById("delProvBtn").onclick=()=>activeProv&&deleteProvince(activeProv);
+
+function showHexCard(c,r){
+  const h=state.hexes[key(c,r)]; if(!h)return;
+  const p=state.provinces[h.prov];
+  document.getElementById("hexcard").style.display="block";
+  document.getElementById("hexinfo").innerHTML=
+    `<div><span class="k">Hex</span><span style="font-family:var(--mono)">${String(c).padStart(2,"0")}${String(r).padStart(2,"0")}</span></div>
+     <div><span class="k">Province</span>${p?esc(p.name):"—"}</div>
+     <div><span class="k">Terrain</span>${(TERR[h.terr]||TERR.plains).name}</div>
+     <div><span class="k">Claimed</span>${h.s} ${h.y} HC</div>
+     ${h.site?`<div><span class="k">Site</span>${SITES[h.site.t]}${h.site.name?" — "+esc(h.site.name):""}</div>`:""}`;
+  if(p)openDossier(h.prov);
+  document.getElementById("hexcard").style.display="block";
+}
+
+/* ═══════════════ CHRONICLE ═══════════════ */
+function chronicleEntries(){
+  const buckets={};
+  for(const k in state.hexes){
+    const h=state.hexes[k];
+    const kk=h.y+"|"+h.s;
+    buckets[kk]=buckets[kk]||{y:h.y,s:h.s,provs:{}};
+    buckets[kk].provs[h.prov]=(buckets[kk].provs[h.prov]||0)+1;
+  }
+  return Object.values(buckets).sort((a,b)=>(b.y*4+SEASONS.indexOf(b.s))-(a.y*4+SEASONS.indexOf(a.s)));
+}
+function renderChronicle(){
+  const list=document.getElementById("chronlist");
+  const entries=chronicleEntries();
+  if(!entries.length){ list.innerHTML=`<div id="chron-empty">No land has yet been called out of the mist. The Chronicle waits for the first candle.</div>`; return;}
+  list.innerHTML=entries.map(e=>{
+    const lines=Object.entries(e.provs).map(([pid,n])=>{
+      const p=state.provinces[pid];
+      const nm=p?esc(p.name):"a lost domain", col=p?p.color:"#666";
+      return `<div class="chron-line"><span class="pdot" style="background:${col}"></span>${nm} claimed ${n} hex${n>1?"es":""} from the mist.</div>`;
+    }).join("");
+    return `<div class="chron-entry"><div class="chron-when">${e.s}, ${e.y} HC</div>${lines}</div>`;
+  }).join("");
+}
+document.getElementById("replayBtn").onclick=()=>{
+  if(replaying)return;
+  const keys=Object.keys(state.hexes);
+  if(!keys.length)return;
+  keys.sort((a,b)=>{
+    const A=state.hexes[a],B=state.hexes[b];
+    return (A.y*4+SEASONS.indexOf(A.s))-(B.y*4+SEASONS.indexOf(B.s));
+  });
+  replaying=true; replayVisible={}; maskDirty=true;
+  let i=0;
+  const perTick=Math.max(1,Math.ceil(keys.length/66)); // ~6s total at 90ms ticks
+  const step=()=>{
+    for(let j=0;j<perTick&&i<keys.length;j++,i++) replayVisible[keys[i]]=1;
+    maskDirty=true;
+    if(i<keys.length) setTimeout(step,90);
+    else setTimeout(()=>{replaying=false;replayVisible=null;maskDirty=true;},900);
+  };
+  step();
+};
+
+/* ═══════════════ SEASON / IO ═══════════════ */
+function seasonLabel(){ document.getElementById("seasonlbl").textContent=state.season+", "+state.year+" HC"; }
+document.getElementById("advanceBtn").onclick=()=>{
+  if(NET.mode==="client"){ hint("Only the keeper of the calendar — your host — may turn the season."); return; }
+  let i=SEASONS.indexOf(state.season)+1, y=state.year;
+  if(i>3){i=0;y++;}
+  act({t:"season",season:SEASONS[i],year:y});
+  hint("The season turns: "+SEASONS[i]+", "+y+" HC. New claims bear this date.");
+};
+document.getElementById("campname").addEventListener("input",e=>{
+  if(NET.mode==="client"){e.target.value=state.camp; hint("Only the host may rename the chronicle."); return;}
+  act({t:"camp",v:e.target.value});
+});
+
+function serialize(){ return JSON.stringify(state); }
+function restore(obj){
+  state=Object.assign({camp:"",season:"Spring",year:551,hexes:{},provinces:{},order:[],nextId:1,frontierRule:true},obj);
+  for(const k in state.hexes){
+    const h=state.hexes[k];
+    if(!Array.isArray(h.roads))h.roads=[];
+    if(!Array.isArray(h.rivers))h.rivers=[];
+    if(!TERR[h.terr])h.terr="plains";
+    if(!h.s)h.s="Spring"; if(!h.y)h.y=state.year;
+  }
+  for(const id of state.order){
+    const p=state.provinces[id];
+    if(!p)continue;
+    if(!/^#[0-9a-fA-F]{6}$/.test(p.color||""))p.color="#8A3030";
+    if(!p.owner)p.owner="host";
+    if(!p.ownerName)p.ownerName=p.owner==="host"?"Game Master":"A Regent";
+    if(!p.ownerColor)p.ownerColor="#D2AC55";
+  }
+  activeProv=state.order[0]||null; selHex=null;
+  document.getElementById("campname").value=state.camp;
+  seasonLabel(); refreshProvList(); renderChronicle();
+  if(activeProv)openDossier(activeProv); else document.getElementById("dossier").style.display="none";
+  maskDirty=true;
+}
+document.getElementById("saveBtn").onclick=()=>{
+  const blob=new Blob([serialize()],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=(state.camp||"mistlands").replace(/\s+/g,"_").toLowerCase()+".mistlands.json";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById("loadBtn").onclick=()=>{
+  if(NET.mode==="client"){hint("Only the host may load a chronicle during a session.");return;}
+  document.getElementById("loadFile").click();
+};
+document.getElementById("loadFile").addEventListener("change",e=>{
+  const file=e.target.files[0]; if(!file)return;
+  const rd=new FileReader();
+  rd.onload=()=>{ try{restore(JSON.parse(rd.result)); broadcastState(); hint("The chronicle is restored.");}
+    catch(err){ hint("That file could not be read as a Mistlands chronicle."); } };
+  rd.readAsText(file); e.target.value="";
+});
+document.getElementById("pngBtn").onclick=()=>{
+  const out=document.createElement("canvas");
+  out.width=WORLD_W; out.height=WORLD_H;
+  const saved={...view}, savedDPR_tx=view.tx;
+  // render once at world scale by temporarily hijacking draw via manual composite
+  const o=out.getContext("2d");
+  o.fillStyle="#151A16"; o.fillRect(0,0,WORLD_W,WORLD_H);
+  // reuse main pipeline cheaply: draw onto a temp by setting view + copying is complex;
+  // simpler: rough re-render of land + fog snapshot
+  exportRender(o);
+  const a=document.createElement("a");
+  a.href=out.toDataURL("image/png");
+  a.download=(state.camp||"mistlands").replace(/\s+/g,"_").toLowerCase()+"_map.png";
+  a.click();
+};
+function exportRender(o){
+  // land
+  for(const k in state.hexes){
+    const h=state.hexes[k],[c,r]=k.split(",").map(Number),p=center(c,r);
+    hexPathOn(o,p.x,p.y,HEX+0.6);
+    o.fillStyle=(TERR[h.terr]||TERR.plains).fill;o.fill();
+    const prov=state.provinces[h.prov];
+    if(prov){o.fillStyle=prov.color+"1E";o.fill();}
+    o.strokeStyle="rgba(70,60,42,.28)";o.lineWidth=1;o.stroke();
+  }
+  o.lineCap="round";
+  for(const pass of["rivers","roads"]){
+    for(const k in state.hexes){
+      const h=state.hexes[k]; if(!h[pass].length)continue;
+      const [c,r]=k.split(",").map(Number),p=center(c,r);
+      for(const d of h[pass]){
+        const n=edgeNeighbor(c,r,d),np=center(n[0],n[1]);
+        o.beginPath();o.moveTo(p.x,p.y);o.lineTo((p.x+np.x)/2,(p.y+np.y)/2);
+        if(pass==="rivers"){o.strokeStyle="#5D7E8E";o.lineWidth=3.4;o.setLineDash([]);}
+        else{o.strokeStyle="#6E5433";o.lineWidth=2;o.setLineDash([5,4]);}
+        o.stroke();
+      }
+    }
+  }
+  o.setLineDash([]);
+  for(const k in state.hexes){
+    const h=state.hexes[k],[c,r]=k.split(",").map(Number),p=center(c,r);
+    const prov=state.provinces[h.prov]; if(!prov)continue;
+    for(let i=0;i<6;i++){
+      const n=edgeNeighbor(c,r,i),nk=key(n[0],n[1]);
+      const nh=inBounds(n[0],n[1])?state.hexes[nk]:null;
+      if(nh&&nh.prov===h.prov)continue;
+      const a1=Math.PI/180*(60*i-90),a2=Math.PI/180*(60*(i+1)-90);
+      o.beginPath();
+      o.moveTo(p.x+HEX*Math.cos(a1),p.y+HEX*Math.sin(a1));
+      o.lineTo(p.x+HEX*Math.cos(a2),p.y+HEX*Math.sin(a2));
+      o.strokeStyle="rgba(30,24,16,.8)";o.lineWidth=4;o.stroke();
+      o.strokeStyle=prov.color;o.lineWidth=2.2;o.stroke();
+    }
+  }
+  o.textAlign="center";
+  const mainCtx=ctx; // reuse glyph funcs on export ctx by temp-swap
+  for(const k in state.hexes){
+    const h=state.hexes[k]; if(!h.site)continue;
+    const [c,r]=k.split(",").map(Number),p=center(c,r);
+    siteGlyph(o,p.x,p.y,h.site.t);
+    if(h.site.name){
+      o.font="10.5px Palatino Linotype, Georgia, serif";
+      o.lineWidth=3;o.strokeStyle="rgba(235,225,195,.85)";
+      o.strokeText(h.site.name,p.x,p.y+HEX*0.72);
+      o.fillStyle="#33291A";o.fillText(h.site.name,p.x,p.y+HEX*0.72);
+    }
+  }
+  for(const id of state.order){
+    const prov=state.provinces[id]; let sx=0,sy=0,n=0;
+    for(const k in state.hexes){const h=state.hexes[k];if(h.prov!==id)continue;
+      const [c,r]=k.split(",").map(Number),p=center(c,r);sx+=p.x;sy+=p.y;n++;}
+    if(!n)continue;
+    const x=sx/n,y=sy/n;
+    o.font="700 15px Palatino Linotype, Georgia, serif";
+    o.lineWidth=4;o.strokeStyle="rgba(238,228,198,.75)";
+    o.strokeText(prov.name.toUpperCase(),x,y-2);
+    o.fillStyle="#4A3A1C";o.fillText(prov.name.toUpperCase(),x,y-2);
+  }
+  // fog
+  o.save();
+  o.fillStyle="rgba(196,201,195,0.97)";
+  o.globalCompositeOperation="source-over";
+  const tmp=document.createElement("canvas");tmp.width=WORLD_W;tmp.height=WORLD_H;
+  const t=tmp.getContext("2d");
+  t.fillStyle="rgba(196,201,195,0.97)";t.fillRect(0,0,WORLD_W,WORLD_H);
+  const pat=t.createPattern(fogTile,"repeat");
+  t.globalAlpha=0.85;t.fillStyle=pat;t.fillRect(0,0,WORLD_W,WORLD_H);
+  t.globalAlpha=1;
+  t.globalCompositeOperation="destination-out";
+  if(maskDirty)rebuildMask();
+  t.drawImage(landMask,0,0);
+  o.drawImage(tmp,0,0);
+  o.restore();
+  // title cartouche
+  o.font="700 22px Palatino Linotype, Georgia, serif";
+  o.textAlign="left";
+  o.fillStyle="#3A3222";
+  o.fillText((state.camp||"The Mistlands").toUpperCase(),24,38);
+  o.font="italic 13px Palatino Linotype, Georgia, serif";
+  o.fillText("as charted in "+state.season+", "+state.year+" HC",24,58);
+}
+function hexPathOn(o,x,y,rad){
+  o.beginPath();
+  for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-90);
+    const px=x+rad*Math.cos(a),py=y+rad*Math.sin(a);
+    i?o.lineTo(px,py):o.moveTo(px,py);}
+  o.closePath();
+}
+
+/* ═══════════════ LOCAL AUTOSAVE ═══════════════ */
+function saveLocal(){ try{ localStorage.setItem("mistlands-save",serialize()); }catch(e){} }
+function loadLocal(){ try{
+    const s=localStorage.getItem("mistlands-save");
+    if(s)restore(JSON.parse(s));
+  }catch(e){} }
+
+/* ═══════════════ INPUT ═══════════════ */
+let hoverHex=null, dragging=false, panning=false, lastPan=null, lastPaintHex=null, spaceHeld=false;
+function screenToWorld(sx,sy){ return {x:(sx-view.tx)/view.s, y:(sy-view.ty)/view.s}; }
+function hint(msg){ const h=document.getElementById("hint"); h.textContent=msg; h.style.opacity=1;
+  clearTimeout(hint._t); hint._t=setTimeout(()=>h.style.opacity=0.55,3500); }
+
+cv.addEventListener("pointerdown",e=>{
+  cv.setPointerCapture(e.pointerId);
+  const rect=cv.getBoundingClientRect();
+  const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+  if(e.button===2||e.button===1||spaceHeld||tool==="inspect"&&e.button===0&&!pixelHitsLand(sx,sy)){
+    panning=true;lastPan=[sx,sy];return;
+  }
+  if(e.button!==0)return;
+  dragging=true; lastPaintHex=null;
+  applyTool(sx,sy,true);
+});
+function pixelHitsLand(sx,sy){
+  const w=screenToWorld(sx,sy),hx=pixelToHex(w.x,w.y);
+  return hx&&state.hexes[key(hx[0],hx[1])];
+}
+cv.addEventListener("pointermove",e=>{
+  const rect=cv.getBoundingClientRect();
+  const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+  const w=screenToWorld(sx,sy);
+  hoverHex=pixelToHex(w.x,w.y);
+  document.getElementById("coords").textContent=hoverHex?("hex "+String(hoverHex[0]).padStart(2,"0")+String(hoverHex[1]).padStart(2,"0")):"";
+  if(NET.mode!=="solo"){
+    const now=Date.now();
+    if(!NET._lastCur||now-NET._lastCur>110){
+      NET._lastCur=now;
+      const msg={t:"cursor",x:w.x,y:w.y};
+      if(NET.mode==="client"){try{NET.hostConn.send(msg);}catch(_){}}
+      else{const p=NET.players.host;broadcast({t:"cursor",id:"host",x:w.x,y:w.y,name:p.name,color:p.color});}
+    }
+  }
+  if(panning){ view.tx+=sx-lastPan[0]; view.ty+=sy-lastPan[1]; lastPan=[sx,sy]; return;}
+  if(dragging)applyTool(sx,sy,false);
+});
+addEventListener("pointerup",()=>{dragging=false;panning=false;lastPaintHex=null;});
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const rect=cv.getBoundingClientRect();
+  const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+  const w=screenToWorld(sx,sy);
+  const ns=Math.min(3.4,Math.max(0.35,view.s*(e.deltaY<0?1.12:0.89)));
+  view.tx=sx-w.x*ns; view.ty=sy-w.y*ns; view.s=ns;
+},{passive:false});
+
+function applyTool(sx,sy,isDown){
+  if(replaying)return;
+  const w=screenToWorld(sx,sy), hx=pixelToHex(w.x,w.y);
+  if(!hx)return;
+  const [c,r]=hx;
+  const same=lastPaintHex&&lastPaintHex[0]===c&&lastPaintHex[1]===r;
+  switch(tool){
+    case "claim": if(!same)claimHex(c,r); break;
+    case "release": if(!same)releaseHex(c,r); break;
+    case "terrain": if(!same)paintTerr(c,r); break;
+    case "road": case "river":
+      if(lastPaintHex&&!same)connectPath(tool==="road"?"roads":"rivers",lastPaintHex[0],lastPaintHex[1],c,r);
+      break;
+    case "erasepath": if(!same)erasePaths(c,r); break;
+    case "site": if(isDown)placeSite(c,r); break;
+    case "erasesite": if(!same)eraseSite(c,r); break;
+    case "inspect":
+      if(isDown&&state.hexes[key(c,r)]){ selHex=[c,r]; showHexCard(c,r); }
+      break;
+  }
+  lastPaintHex=[c,r];
+}
+
+/* tools ui */
+function setTool(t){
+  tool=t;
+  document.querySelectorAll(".tool").forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
+  document.getElementById("terrainSel").classList.toggle("open",t==="terrain");
+  document.getElementById("siteSel").classList.toggle("open",t==="site");
+  cv.style.cursor= t==="inspect"?"default":"crosshair";
+  const hints={claim:"Click or drag in the mist to claim land for the active province.",
+    release:"Click claimed land to return it to the mist.",
+    terrain:"Pick a terrain below, then paint claimed land.",
+    road:"Drag a path across hexes to lay a road.",
+    river:"Drag a path across hexes to trace a river.",
+    erasepath:"Click hexes to clear their roads and rivers.",
+    site:"Pick a site type below, then click a claimed hex to place and name it.",
+    erasesite:"Click a hex to remove its site.",
+    inspect:"Click claimed land to inspect. Drag to pan; scroll to zoom."};
+  if(hints[t])hint(hints[t]);
+}
+document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
+document.querySelectorAll("#terrainSel .sub").forEach(b=>b.onclick=()=>{
+  curTerr=b.dataset.terr;
+  document.querySelectorAll("#terrainSel .sub").forEach(x=>x.classList.toggle("active",x===b));
+});
+document.querySelectorAll("#siteSel .sub").forEach(b=>b.onclick=()=>{
+  curSite=b.dataset.site;
+  document.querySelectorAll("#siteSel .sub").forEach(x=>x.classList.toggle("active",x===b));
+});
+document.querySelector('#terrainSel .sub[data-terr="plains"]').classList.add("active");
+document.querySelector('#siteSel .sub[data-site="village"]').classList.add("active");
+
+/* tabs */
+function showPane(p){
+  document.querySelectorAll(".dtab").forEach(t=>t.classList.toggle("active",t.dataset.pane===p));
+  document.querySelectorAll(".dpane").forEach(x=>x.classList.toggle("active",x.id==="pane-"+p));
+}
+document.querySelectorAll(".dtab").forEach(t=>t.onclick=()=>showPane(t.dataset.pane));
+
+/* keys */
+addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select"))return;
+  if(e.code==="Space"){spaceHeld=true;e.preventDefault();}
+  const k=e.key.toLowerCase();
+  if(k==="c")setTool("claim"); else if(k==="x")setTool("release");
+  else if(k==="t")setTool("terrain"); else if(k==="r")setTool("road");
+  else if(k==="v")setTool("river"); else if(k==="s")setTool("site");
+  else if(e.key==="Escape")setTool("inspect");
+});
+addEventListener("keyup",e=>{if(e.code==="Space")spaceHeld=false;});
+
+/* help */
+document.getElementById("helpBtn").onclick=()=>document.getElementById("help").classList.add("open");
+document.getElementById("helpClose").onclick=()=>document.getElementById("help").classList.remove("open");
+
+/* ═══════════════ BOOT ═══════════════ */
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
+resize();
+loadLocal();
+seasonLabel(); refreshProvList(); renderChronicle();
+view.tx=(cv.clientWidth-WORLD_W*view.s)/2;
+view.ty=(cv.clientHeight-WORLD_H*view.s)/2;
+setTool(Object.keys(state.hexes).length?"inspect":"claim");
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
