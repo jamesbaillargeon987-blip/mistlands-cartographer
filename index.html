@@ -121,20 +121,71 @@ kbd{font-family:var(--mono)}
 .sub:hover{border-color:var(--edge);color:var(--ink)}
 .sub.active{border-color:var(--gold);color:var(--gold-hi)}
 @media (prefers-reduced-motion: reduce){ /* honored in JS */ }
+
+/* Refined workspace: readable controls, a quiet map, and room to work. */
+:root{--ink:#e9e2cf;--ink-dim:#adb4a5;--edge:#3c493e;--chrome:#1b241f;--chrome2:#253129}
+body{font-size:15px}button,input,textarea{accent-color:var(--gold-hi)}
+button{transition:background .15s,border-color .15s,color .15s}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
+button:disabled{opacity:.4;cursor:not-allowed}button:hover:disabled{border-color:var(--edge);color:var(--ink-dim)}
+#topbar{height:76px;gap:18px;padding:10px 20px;box-shadow:0 2px 12px #0003;position:relative;z-index:3}
+#title{font-size:21px;letter-spacing:.16em}#title b{display:block;font:10px system-ui,sans-serif;letter-spacing:.25em;text-transform:uppercase;margin-top:5px;color:var(--ink-dim)}
+#campname{width:190px;font-size:16px;padding:7px}#seasonbox{gap:7px;flex-wrap:wrap;justify-content:flex-end}
+#seasonlbl{font-size:13px;margin-right:7px}.tbtn{font:12px system-ui,sans-serif;letter-spacing:.02em;font-variant:normal;padding:9px 12px;border-radius:6px}
+#main{height:calc(100% - 76px)}#rail{width:82px;flex-shrink:0;padding:12px 5px;gap:5px}
+.rlabel{font:9px system-ui,sans-serif;letter-spacing:.16em;margin-top:12px}.tool{width:64px;height:47px;font-size:22px;flex-shrink:0;border-radius:7px}.tool small{font:10px system-ui,sans-serif;letter-spacing:.03em;text-transform:capitalize}
+.tool.active{background:#b08f4226;box-shadow:inset 3px 0 var(--gold-hi)}
+#drawer{width:326px;flex-shrink:0;background:linear-gradient(130deg,#243027,#1b241f)}
+.dpane{padding:18px}.dtab{padding:15px 0;font-size:14px}.field{margin-bottom:13px}.field label{font:10px system-ui,sans-serif;letter-spacing:.1em;margin-bottom:6px}
+.field input[type=text],.field input[type=number],.field textarea{padding:9px 10px;font-size:14px;border-radius:5px}.field textarea{min-height:78px}
+h3.sect{margin:23px 0 12px;padding-bottom:9px;font-size:14px}.provrow{padding:10px;border-radius:6px;gap:8px}.provrow.mine{padding-left:8px}.pcount{font-size:11px}.prowner{font-size:11px}
+#stampline{font:11px/1.7 system-ui,sans-serif}#hexinfo{line-height:1.9}#hint{bottom:37px;max-width:calc(100% - 32px);white-space:normal;text-align:center;font:12px/1.5 system-ui,sans-serif;padding:9px 15px;border-radius:7px;color:#e0ddce;box-shadow:0 3px 12px #0002;z-index:4}
+#coords{bottom:9px;left:16px;font-size:10px;color:#34483a}#statusline{position:absolute;bottom:0;right:0;left:0;height:29px;background:#e4e6dcdd;border-top:1px solid #7f8b7b44;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;font:10px system-ui,sans-serif;color:#34483a;pointer-events:none}
+#maptools{position:absolute;top:16px;left:16px;display:flex;gap:5px;z-index:5;max-width:calc(100% - 32px);flex-wrap:wrap}#maptools .tbtn{background:#1c281fee;box-shadow:0 2px 8px #0002;padding:8px 11px}#zoomValue{min-width:56px}
+#toolpanel{position:absolute;left:16px;top:64px;z-index:5;width:218px;background:#1c281ff5;border:1px solid var(--edge);border-radius:9px;box-shadow:0 6px 24px #0003;display:none;padding:14px}
+#toolpanel h4{font-size:15px;color:var(--gold-hi);font-weight:normal;margin-bottom:5px}#toolpanel p{font:11px/1.5 system-ui,sans-serif;color:var(--ink-dim);margin-bottom:10px}
+#toolpanel .subsel{border:0;padding:0;margin:0;display:none;grid-template-columns:1fr 1fr;gap:6px}#toolpanel .subsel.open{display:grid}.sub{width:100%;min-height:34px;font:11px system-ui,sans-serif;text-transform:none;text-align:left;padding:7px;background:#ffffff05;border-color:#ffffff12;border-radius:5px}.sub.active{background:#b08f4225}.swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:middle}
+#emptyGuide{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);width:340px;max-width:85%;padding:26px;text-align:center;background:#f3eeddeF;border:1px solid #76827166;border-radius:12px;box-shadow:0 15px 55px #273d2520;color:#344235;z-index:2}#emptyGuide h2{font-size:25px;font-weight:normal;margin-bottom:10px}#emptyGuide p{font:13px/1.7 system-ui,sans-serif;margin-bottom:16px}#emptyGuide .tbtn{background:#283e2c;color:#f5edce;border-color:#476344;width:100%}
+#saveStatus{font:10px system-ui,sans-serif;color:var(--ink-dim);display:block;margin-top:5px}#provinceSearch{width:100%;margin-bottom:12px;background:#151d17;border:1px solid var(--edge);padding:9px;color:var(--ink);border-radius:5px;font:12px system-ui,sans-serif}#drawerToggle{display:none}
+#help{z-index:50}#helpcard{border-radius:12px;box-shadow:0 20px 70px #0006}#helpcard p{margin-bottom:12px}#namebox{max-width:calc(100% - 16px)}
+@media(max-width:1150px){#campname{width:140px}#title{font-size:17px}#topbar{gap:10px;padding:10px 12px}#drawer{width:285px}#seasonlbl{width:100%;text-align:right;font-size:12px}.tbtn{padding:8px 10px}}
+@media(max-width:800px){#topbar{height:108px;flex-wrap:wrap;align-content:center}#title{font-size:16px}#title b{font-size:8px}#campname{margin-left:auto;width:145px}#seasonbox{width:100%;justify-content:flex-start;flex-wrap:nowrap;gap:5px}#seasonlbl{width:auto;text-align:left;margin-right:auto;font-size:11px}#main{height:calc(100% - 108px)}#rail{width:66px}.tool{width:52px}.tool small{font-size:9px}#drawerToggle{display:block}#drawer{display:none;position:absolute;right:0;top:108px;bottom:0;z-index:12;width:min(326px,calc(100% - 70px));box-shadow:-10px 0 30px #0004}body.drawer-open #drawer{display:flex}#hint{font-size:11px}#toolpanel{width:192px}#maptools{gap:3px;left:10px;top:10px}#maptools .tbtn{padding:8px}#toolpanel{top:58px;left:10px}#statusline{font-size:9px}#saveStatus{display:none}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
+@media(max-width:480px){#seasonbox{overflow-x:auto;padding-bottom:5px}#seasonbox>*{flex-shrink:0}#topbar{height:120px}#main{height:calc(100% - 120px)}#drawer{top:120px}#seasonlbl{margin-right:4px}#maptools .tbtn{font-size:10px;padding:7px}#toolpanel{top:85px}#title{font-size:14px}#campname{width:125px}}
+
+#statusline{justify-content:space-between;gap:14px}
+#statusline #coords{position:static;min-width:0;flex:1;font:11px system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#34483a}
+#mapSummary{flex-shrink:0}
+.map-name-setting{display:flex;align-items:center;gap:9px;font:12px/1.5 system-ui,sans-serif;color:var(--ink);cursor:pointer}
+.map-name-setting input{width:16px;height:16px;flex:none}
+.map-name-help{font:11px/1.6 system-ui,sans-serif;color:var(--ink-dim);margin:7px 0 15px}
+@media(max-width:480px){#mapSummary{display:none}}
+
+.hex-heading{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--edge)}
+#hexNumber{font:11px var(--mono);color:var(--gold-hi)}#hexProvince{font-size:19px;overflow-wrap:anywhere}
+.hex-help,.hex-empty p{font:11px/1.65 system-ui,sans-serif;color:var(--ink-dim);margin:8px 0 14px}
+#hexinfo{margin-bottom:12px}#hexinfo:empty{display:none}
+#hexConnections{font:12px/1.6 system-ui,sans-serif;margin-bottom:14px}
+.connection-row{border:1px solid var(--edge);border-radius:6px;padding:9px;margin:7px 0;background:#ffffff04}
+.connection-row label{display:block;color:var(--ink-dim);font-size:11px;margin-bottom:5px}
+.connection-row select,.field select{width:100%;background:#151d17;color:var(--ink);border:1px solid var(--edge);padding:8px;border-radius:5px;font:12px system-ui,sans-serif}
+#h_notes{min-height:140px}#h_conditions,#h_resources{min-height:64px}.field input:disabled,.field textarea:disabled,.field select:disabled{opacity:.65}
+#pane-hex .frow .tbtn{flex:1}.dtab{letter-spacing:.04em;font-size:13px}
 </style>
 </head>
 <body>
 
 <div id="topbar">
-  <div id="title">The Mistlands <b>· Domain Cartographer</b></div>
-  <input id="campname" value="The Reclaimed Lands" title="Campaign name">
+  <div id="title">The Mistlands <b>Domain Cartographer</b><span id="saveStatus" role="status">Ready to chart</span></div>
+  <input aria-label="Campaign name" id="campname" value="The Reclaimed Lands" title="Campaign name">
   <div id="seasonbox">
     <span id="seasonlbl">Spring, 551 HC</span>
     <button class="tbtn primary" id="advanceBtn" title="Advance to the next season">Advance Season</button>
-    <button class="tbtn" id="saveBtn">Save</button>
-    <button class="tbtn" id="loadBtn">Load</button>
+    <button class="tbtn" id="saveBtn" title="Download a complete campaign backup (Ctrl / Command + S)">Save file</button>
+    <button class="tbtn" id="loadBtn">Open file</button>
     <button class="tbtn" id="pngBtn">Export PNG</button>
-    <button class="tbtn" id="helpBtn">?</button>
+    <button class="tbtn" id="helpBtn" aria-label="Open cartographer guide">?</button>
     <input type="file" id="loadFile" accept=".json" style="display:none">
   </div>
 </div>
@@ -144,8 +195,8 @@ kbd{font-family:var(--mono)}
     <div class="rlabel">Survey</div>
     <button class="tool" data-tool="inspect" title="Inspect / pan (Esc)">☉<small>inspect</small></button>
     <div class="rlabel">Claim</div>
-    <button class="tool" data-tool="claim" title="Claim land from the mist (C)">🕯<small>claim</small></button>
-    <button class="tool" data-tool="release" title="Release land back to the mist (X)">🌫<small>release</small></button>
+    <button class="tool" data-tool="claim" title="Claim land from the mist (C)"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 10h6v10H9zM6 21h12M12 8c-5-2 0-6 0-6s5 4 0 6Z"/></svg><small>claim</small></button>
+    <button class="tool" data-tool="release" title="Release land back to the mist (X)">░<small>release</small></button>
     <div class="rlabel">Shape</div>
     <button class="tool" data-tool="terrain" title="Paint terrain (T)">▲<small>terrain</small></button>
     <div class="subsel" id="terrainSel">
@@ -158,8 +209,11 @@ kbd{font-family:var(--mono)}
       <button class="sub" data-terr="water">Water</button>
     </div>
     <button class="tool" data-tool="road" title="Draw roads — drag across hexes (R)">〓<small>road</small></button>
-    <button class="tool" data-tool="river" title="Draw rivers — drag across hexes (V)">≋<small>river</small></button>
-    <button class="tool" data-tool="erasepath" title="Erase roads &amp; rivers on a hex">╳<small>er.path</small></button>
+    <button class="tool" data-tool="river" title="Draw rivers along hex boundaries (V)">≋<small>river</small></button>
+    <button class="tool" data-tool="eraseroad" title="Remove roads from a hex; rivers stay intact">╳<small>erase road</small></button>
+    <button class="tool" data-tool="eraseriver" title="Erase a river edge; click inside a hex to erase an older river">≁<small>erase river</small></button>
+    <button class="tool" data-tool="crossing" title="Place a bridge or ford on a river edge (B)">♜<small>crossing</small></button>
+    <div class="subsel" id="crossingSel"><button class="sub active" data-crossing="bridge">Bridge</button><button class="sub" data-crossing="ford">Ford</button><button class="sub" data-crossing="none">Remove</button></div>
     <div class="rlabel">Sites</div>
     <button class="tool" data-tool="site" title="Place a site (S)">⌂<small>site</small></button>
     <div class="subsel" id="siteSel">
@@ -175,8 +229,15 @@ kbd{font-family:var(--mono)}
   </div>
 
   <div id="stage">
-    <canvas id="map"></canvas>
-    <div id="coords"></div>
+    <canvas id="map" aria-label="Interactive hex map. Choose a tool, then click or drag to edit." tabindex="0"></canvas>
+    <div id="statusline"><span id="coords"></span><span id="mapSummary"></span></div>
+    <div id="maptools" role="toolbar" aria-label="Map controls">
+      <button class="tbtn" id="undoBtn" title="Undo (Ctrl / Command + Z)">↶ Undo</button><button class="tbtn" id="redoBtn" title="Redo (Ctrl / Command + Shift + Z)">↷</button>
+      <button class="tbtn" id="zoomOut" aria-label="Zoom out">−</button><button class="tbtn" id="zoomValue" title="Reset zoom to 100%">100%</button><button class="tbtn" id="zoomIn" aria-label="Zoom in">+</button>
+      <button class="tbtn" id="fitBtn" title="Fit all claimed land (F)">Fit map</button><button class="tbtn" id="drawerToggle">Dossier</button>
+    </div>
+    <div id="toolpanel"><h4 id="tooltitle"></h4><p id="tooldesc"></p></div>
+    <div id="emptyGuide"><h2>A world beyond the mist</h2><p>Found your first province, then click the mist to reveal its land. Expand along the frontier and give your realm its shape.</p><button class="tbtn" id="beginBtn">Found your first province</button></div>
     <div id="errbar" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);
       max-width:80%;background:#4A1414;border:1px solid #A84040;border-radius:4px;color:#F0D9C8;
       padding:6px 14px;font-size:12px;font-family:var(--mono);z-index:40"></div>
@@ -199,15 +260,14 @@ kbd{font-family:var(--mono)}
         <p><b>Claim</b> 🕯 — pick a province (or make one), then click or drag in the fog. After the first
         hex, new land must touch existing land: the frontier only moves outward. <b>Release</b> 🌫 returns
         land to the mist.</p>
-        <p><b>Terrain</b> ▲ paints claimed land. <b>Roads</b> 〓 and <b>rivers</b> ≋ are drawn by dragging a
-        path across hexes. <b>Sites</b> ⌂ place cities, castles, standing stones and the like — the site appears
+        <p><b>Terrain</b> ▲ paints claimed land. <b>Roads</b> 〓 and <b>rivers</b> ≋ follow hex boundaries; roads connect hex centers. <b>Sites</b> ⌂ place cities, castles, standing stones and the like — the site appears
         at once and a small naming card opens beside it.</p>
         <p><b>Inspect</b> ☉ — click any claimed hex to open its province dossier. Drag to pan (any tool:
         right-drag or hold <span class="kbd">Space</span>), scroll to zoom.</p>
         <p><b>Advance Season</b> moves the calendar Spring→Summer→Autumn→Winter and rolls the year after
         Winter. New claims stamp with the new date. The Chronicle tab lists every season's conquests and
         can <b>replay</b> the whole reclamation from the first candle.</p>
-        <p><b>Save</b> writes the world to a JSON file; <b>Load</b> restores it. The map also autosaves in
+        <p><b>Hex dossier</b> — inspect a hex to edit its local name, terrain, settlement, resources, conditions, and notes. In live sessions these notes are shared. <b>Rivers</b> now follow hex edges: click a boundary and drag to extend a connected waterway. Existing center-running rivers remain intact. <b>Crossings (B)</b> adds bridges or fords to edge rivers. <b>Erase road</b> clears roads in a hex; <b>Erase river</b> removes individual river edges, or an older river when you click inside its hex.</p><p><b>Province names</b> stay off the terrain by default. Hover over a hex to read its province in the bottom bar. Turn on <b>Show province names on the map</b> in the Province tab when you want labels, including in PNG exports.</p><p><b>Undo / Redo</b> restores an entire brush stroke in solo play. Use <span class="kbd">Ctrl / ⌘ Z</span> to undo and <span class="kbd">Ctrl / ⌘ Shift Z</span> to redo. <span class="kbd">F</span> fits all claimed land. Select a province and choose <b>Locate selected province</b> to find it.</p><p><b>Save file</b> writes the world to a JSON file; <b>Load</b> restores it. The map also autosaves in
         this browser. <b>Export PNG</b> renders a shareable image.</p>
         <p style="margin-top:10px">Keys: <span class="kbd">C</span> claim · <span class="kbd">X</span> release ·
         <span class="kbd">T</span> terrain · <span class="kbd">R</span> road · <span class="kbd">V</span> river ·
@@ -219,14 +279,16 @@ kbd{font-family:var(--mono)}
 
   <div id="drawer">
     <div id="dtabs">
-      <button class="dtab active" data-pane="province">Province</button>
+      <button class="dtab active" data-pane="province">Province</button><button class="dtab" data-pane="hex">Hex</button>
       <button class="dtab" data-pane="chronicle">Chronicle</button>
       <button class="dtab" data-pane="company">Company</button>
     </div>
 
     <div class="dpane active" id="pane-province">
       <h3 class="sect">Provinces</h3>
-      <div id="provlist"></div>
+      <label class="map-name-setting"><input type="checkbox" id="showProvinceNames"> Show province names on the map</label>
+      <p class="map-name-help">Hover over land to see its province in the bottom bar. This setting also controls names in PNG exports.</p>
+      <input type="search" id="provinceSearch" aria-label="Find a province" placeholder="Find a province…"><div id="provlist"></div><button class="tbtn wide" id="focusProvince">Locate selected province</button>
       <button class="tbtn wide" id="newProvBtn">+ Found a New Province</button>
 
       <div id="dossier" style="display:none">
@@ -245,9 +307,25 @@ kbd{font-family:var(--mono)}
         <button class="tbtn wide danger" id="delProvBtn">Release province to the mist</button>
       </div>
 
+
+    </div>
+
+    <div class="dpane" id="pane-hex">
+      <div id="hexEmpty" class="hex-empty"><h3 class="sect">A closer look</h3><p>Choose Inspect, then click a claimed hex. Record its resources, local troubles, settlements, and discoveries here.</p><button class="tbtn wide" id="inspectHexBtn">Inspect the map</button></div>
       <div id="hexcard" style="display:none">
-        <h3 class="sect">Hex</h3>
+        <div class="hex-heading"><span id="hexNumber"></span><span id="hexProvince"></span></div>
         <div id="hexinfo"></div>
+        <div class="field"><label for="h_label">Local name</label><input id="h_label" type="text" maxlength="160" placeholder="e.g. The Alderwood"></div>
+        <div class="field"><label for="h_terrain">Terrain</label><select id="h_terrain"><option value="plains">Plains</option><option value="farmland">Farmland</option><option value="forest">Forest</option><option value="hills">Hills</option><option value="mountains">Mountains</option><option value="swamp">Swamp</option><option value="water">Water</option></select></div>
+        <div class="frow"><div class="field"><label for="h_site">Settlement / landmark</label><select id="h_site"><option value="">None</option><option value="city">City</option><option value="town">Town</option><option value="village">Village</option><option value="castle">Castle</option><option value="ruin">Ruin</option><option value="stone">Standing stone</option><option value="source">Ley source</option></select></div></div>
+        <div class="field"><label for="h_sitename">Settlement / landmark name</label><input id="h_sitename" type="text" maxlength="200" placeholder="e.g. Blackfen Keep"></div>
+        <div class="field"><label for="h_resources">Resources</label><textarea id="h_resources" maxlength="4000" placeholder="Timber, iron deposits, grazing land, good fishing…"></textarea></div>
+        <div class="field"><label for="h_conditions">Local conditions</label><textarea id="h_conditions" maxlength="4000" placeholder="Bandits on the road; flooded fields; a disputed border…"></textarea></div>
+        <div class="field"><label for="h_notes">Notes &amp; discoveries</label><textarea id="h_notes" maxlength="20000" placeholder="People, rumors, encounters, discoveries, and anything else worth remembering."></textarea></div>
+        <p class="hex-help">Edits save automatically. These details are shared with everyone in a live session.</p>
+        <h3 class="sect">Roads &amp; waterways</h3><div id="hexConnections"></div>
+        <div class="frow"><button class="tbtn" id="hexRoadBtn">Draw road</button><button class="tbtn" id="hexRiverBtn">Draw river</button></div>
+        <p id="hexClaimed" class="hex-help"></p>
       </div>
     </div>
 
@@ -324,6 +402,7 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let state = {
   camp:"The Reclaimed Lands", season:"Spring", year:551,
   hexes:{},            // "c,r" -> {terr, prov, s, y, roads:[dirs], rivers:[dirs], site:{t,name}}
+  riverEdges:{},       // canonical hex-edge -> {crossing:null|bridge|ford}
   provinces:{},        // id -> {name, ruler, level, holdings, notes, color}
   order:[],            // province id order
   nextId:1, frontierRule:true
@@ -440,7 +519,7 @@ addEventListener("resize",resize);
 if(window.ResizeObserver){ new ResizeObserver(resize).observe(cv); }
 
 /* ═══════════════ DRAW ═══════════════ */
-function terrGlyphs(c,r,x,y,terr){
+function terrGlyphs(c,r,x,y,terr,ctx){
   ctx.strokeStyle="rgba(60,52,38,.55)"; ctx.lineWidth=1.1; ctx.fillStyle="rgba(60,52,38,.5)";
   const j=((c*73+r*131)%7)-3;
   if(terr==="forest"){
@@ -500,12 +579,16 @@ function siteGlyph(g,x,y,t){
 
 let fogT=0;
 const fogCv=document.createElement("canvas");
+let lastFrame=0;
 function draw(ts){
+  if(document.hidden||ts-lastFrame<33){requestAnimationFrame(draw);return;}
+  lastFrame=ts;
   try{ drawFrame(ts); }
   catch(err){ showErr(err); }
   requestAnimationFrame(draw);
 }
 function drawFrame(ts){
+  updateHoverReadout();
   if(!reduceMotion) fogT=(ts||0)/1000;
   const W=cv.width,H=cv.height;
   if(W<2||H<2){ resize(); return; }
@@ -525,26 +608,8 @@ function drawFrame(ts){
     const prov=state.provinces[h.prov];
     if(prov){ ctx.fillStyle=prov.color+"1E"; ctx.fill(); }
     ctx.strokeStyle="rgba(70,60,42,.28)"; ctx.lineWidth=1; ctx.stroke();
-    terrGlyphs(c,r,p.x,p.y,h.terr);
+    terrGlyphs(c,r,p.x,p.y,h.terr,ctx);
   }
-  /* rivers then roads */
-  ctx.lineCap="round";
-  for(const pass of["rivers","roads"]){
-    for(const k in state.hexes){
-      if(replayVisible&&!replayVisible[k])continue;
-      const h=state.hexes[k]; if(!h[pass]||!h[pass].length)continue;
-      const [c,r]=k.split(",").map(Number), p=center(c,r);
-      for(const d of h[pass]){
-        const n=edgeNeighbor(c,r,d), np=center(n[0],n[1]);
-        const mx=(p.x+np.x)/2,my=(p.y+np.y)/2;
-        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mx,my);
-        if(pass==="rivers"){ ctx.strokeStyle="#5D7E8E"; ctx.lineWidth=3.4; ctx.setLineDash([]); }
-        else { ctx.strokeStyle="#6E5433"; ctx.lineWidth=2; ctx.setLineDash([5,4]); }
-        ctx.stroke();
-      }
-    }
-  }
-  ctx.setLineDash([]);
   /* province borders */
   for(const k in state.hexes){
     if(replayVisible&&!replayVisible[k])continue;
@@ -562,6 +627,8 @@ function drawFrame(ts){
       ctx.strokeStyle=prov.color; ctx.lineWidth=2.2; ctx.stroke();
     }
   }
+  drawTransport(ctx,replayVisible);
+  drawEdgePreview(ctx);
   /* sites + names */
   ctx.textAlign="center";
   for(const k in state.hexes){
@@ -576,25 +643,6 @@ function drawFrame(ts){
       ctx.fillStyle="#33291A"; ctx.fillText(h.site.name,p.x,p.y+HEX*0.72);
     }
   }
-  /* province labels at centroid */
-  for(const id of state.order){
-    const prov=state.provinces[id]; if(!prov)continue;
-    let sx=0,sy=0,n=0;
-    for(const k in state.hexes){ const h=state.hexes[k];
-      if(h.prov!==id)continue; if(replayVisible&&!replayVisible[k])continue;
-      const [c,r]=k.split(",").map(Number),p=center(c,r); sx+=p.x;sy+=p.y;n++; }
-    if(!n)continue;
-    const x=sx/n,y=sy/n;
-    ctx.font="700 15px Palatino Linotype, Georgia, serif";
-    const label=prov.name.toUpperCase();
-    ctx.lineWidth=4; ctx.strokeStyle="rgba(238,228,198,.75)";
-    ctx.strokeText(label,x,y-2);
-    ctx.fillStyle="#4A3A1C"; ctx.fillText(label,x,y-2);
-    ctx.font="10px Palatino Linotype, Georgia, serif";
-    ctx.fillStyle="rgba(74,58,28,.75)";
-    ctx.fillText("province "+(prov.level||0),x,y+11);
-  }
-
   /* ── FOG ── */
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
@@ -617,6 +665,8 @@ function drawFrame(ts){
   f.drawImage(landMask,0,0);
   ctx.drawImage(fogCv,0,0);
   ctx.restore();
+
+  drawProvinceLabels(ctx,replayVisible);
 
   /* frontier ghost grid + hover glow (over fog) */
   ctx.setTransform(sc,0,0,sc,view.tx*devicePixelRatio,view.ty*devicePixelRatio);
@@ -729,7 +779,7 @@ function joinSession(){
 }
 function leaveSession(){
   try{ if(NET.peer)NET.peer.destroy(); }catch(_){}
-  NET.mode="solo"; NET.peer=null; NET.conns={}; NET.hostConn=null;
+  NET.mode="solo"; NET.myId="host"; NET.permOwn=true; NET.peer=null; NET.conns={}; NET.hostConn=null;
   NET.players={}; NET.cursors={};
   document.getElementById("net-live").style.display="none";
   document.getElementById("net-solo").style.display="block";
@@ -739,7 +789,7 @@ function liveUI(code){
   document.getElementById("net-live").style.display="block";
   document.getElementById("net_showcode").textContent=code;
   document.getElementById("permwrap").style.display=NET.mode==="host"?"block":"none";
-  refreshPlayers(); showPane("company");
+  refreshPlayers(); showPane("company");updateWorkspace();
 }
 function refreshPlayers(){
   const el=document.getElementById("playerlist"); if(!el)return;
@@ -755,11 +805,14 @@ function broadcast(m){ for(const id in NET.conns){ try{NET.conns[id].send(m);}ca
 function broadcastState(){
   if(NET.mode!=="host")return;
   clearTimeout(NET._bt);
-  NET._bt=setTimeout(()=>broadcast({t:"state",state:JSON.parse(serialize()),players:NET.players}),120);
+  NET._bt=setTimeout(()=>broadcast({t:"state",state:JSON.parse(serialize()),players:NET.players,permOwn:NET.permOwn}),120);
 }
 function ownerOf(provId){ const p=state.provinces[provId]; return p?(p.owner||"host"):null; }
 function permitted(senderId,a){
+  if(!validAction(a)||a.t==="season"||a.t==="camp")return false;
   if(!NET.permOwn)return true;
+  if(['riveredge','crossing'].includes(a.t))return edgeBanks(edgeRef(a.c,a.r,a.d)).every(h=>ownerOf(h.prov)===senderId);
+  if(a.t==="path")return [state.hexes[key(a.c1,a.r1)],state.hexes[key(a.c2,a.r2)]].every(h=>h&&ownerOf(h.prov)===senderId);
   const provOf=(c,r)=>{const hx=state.hexes[key(c,r)];return hx?hx.prov:null;};
   let pid=null;
   if(a.t==="claim")pid=a.prov;
@@ -776,7 +829,7 @@ function handleClientData(conn,m){
   if(m.t==="hello"){
     const color=PROV_COLORS[(Object.keys(NET.players).length)%PROV_COLORS.length];
     NET.players[conn.peer]={name:String(m.name||"A Regent").slice(0,40),color};
-    conn.send({t:"state",state:JSON.parse(serialize()),players:NET.players});
+    conn.send({t:"state",state:JSON.parse(serialize()),players:NET.players,permOwn:NET.permOwn});
     broadcast({t:"players",players:NET.players});
     refreshPlayers();
   } else if(m.t==="act"){
@@ -795,13 +848,17 @@ function handleClientData(conn,m){
 function handleHostData(m){
   if(!m||!m.t)return;
   if(m.t==="state"){
+    stopReplay(); undoStack=[];redoStack=[];
+    NET.permOwn=m.permOwn!==false;
     NET.players=m.players||NET.players;
-    const keepProv=activeProv;
-    restore(m.state);
+    const keepProv=activeProv,keepHex=selHex?[...selHex]:null;
+    const oldPane=document.querySelector(".dpane.active").id.replace("pane-", "");
+    restore(m.state);showPane(oldPane);
     if(keepProv&&state.provinces[keepProv])activeProv=keepProv;
     else activeProv=state.order.find(id=>state.provinces[id].owner===NET.myId)||null;
     refreshProvList(); refreshPlayers();
     if(activeProv)openDossierQuiet(activeProv);
+    if(keepHex&&state.hexes[key(...keepHex)]){selHex=keepHex;populateHexCard();}
   } else if(m.t==="players"){ NET.players=m.players; refreshPlayers(); }
   else if(m.t==="deny"){ hint(m.msg||"The host refused that act."); }
   else if(m.t==="cursor"){ if(m.id!==NET.myId)NET.cursors[m.id]={x:m.x,y:m.y,name:m.name,color:m.color,ts:Date.now()}; }
@@ -809,12 +866,13 @@ function handleHostData(m){
 document.getElementById("hostBtn").onclick=hostSession;
 document.getElementById("joinBtn").onclick=joinSession;
 document.getElementById("leaveBtn").onclick=leaveSession;
-document.getElementById("permOwn").addEventListener("change",e=>{NET.permOwn=e.target.checked;});
+document.getElementById("permOwn").addEventListener("change",e=>{NET.permOwn=e.target.checked;broadcastState();});
 
 /* every mutation flows through act() → applyAction() */
 function act(a){
   if(NET.mode==="client"){
-    applyAction(a,NET.myId);           // optimistic; host state overwrites shortly
+    if(!permitted(NET.myId,a)){hint("That change is reserved for its owner or the host.");return;}
+    applyAction(a,NET.myId);
     try{NET.hostConn.send({t:"act",a});}catch(_){}
   } else {
     applyAction(a,"host");
@@ -822,14 +880,19 @@ function act(a){
   }
 }
 function applyAction(a,actor){
+  if(!validAction(a))return;
   switch(a.t){
+    case 'hexdetail':{const h=state.hexes[key(a.c,a.r)];if(h){h.details??={label:'',resources:'',conditions:'',notes:''};h.details[a.prop]=a.val;}break;}
+    case 'riveredge':{const ref=edgeRef(a.c,a.r,a.d);state.riverEdges??={};if(a.erase)delete state.riverEdges[ref.id];else state.riverEdges[ref.id]??={crossing:null};break;}
+    case 'crossing':{const h=state.riverEdges?.[edgeRef(a.c,a.r,a.d).id];if(h)h.crossing=a.kind==='none'?null:a.kind;break;}
+    case 'erasekind':{eraseRouteKind(a.c,a.r,a.kind);break;}
     case "claim":{
       const k=key(a.c,a.r);
       if(state.hexes[k]||!state.provinces[a.prov])return;
       if(state.frontierRule&&Object.keys(state.hexes).length>0){
         if(!neighbors(a.c,a.r).some(([nc,nr])=>state.hexes[key(nc,nr)]))return;
       }
-      state.hexes[k]={terr:a.terr||"plains",prov:a.prov,s:a.s,y:a.y,roads:[],rivers:[],site:null};
+      state.hexes[k]={terr:a.terr||"plains",prov:a.prov,s:a.s,y:a.y,roads:[],rivers:[],site:null,details:{label:"",resources:"",conditions:"",notes:""}};
       maskDirty=true; break;
     }
     case "release":{
@@ -871,18 +934,20 @@ function applyAction(a,actor){
         owner:actor,ownerName,ownerColor};
       state.order.push(a.id); break;
     }
-    case "prov":{ const p=state.provinces[a.id]; if(p)p[a.prop]= a.prop==="level"?(parseInt(a.val)||0):a.val; break; }
+    case "prov":{ const p=state.provinces[a.id]; if(p)p[a.prop]= a.prop==="level"?Math.max(0,Math.min(10,parseInt(a.val)||0)):a.val; break; }
     case "delprov":{
       for(const k of Object.keys(state.hexes)) if(state.hexes[k].prov===a.id) delete state.hexes[k];
       delete state.provinces[a.id];
       state.order=state.order.filter(x=>x!==a.id);
       if(activeProv===a.id)activeProv=state.order[0]||null;
-      maskDirty=true; break;
+      repairPaths(); maskDirty=true; break;
     }
     case "season":{ state.season=a.season; state.year=a.year; seasonLabel(); break; }
     case "camp":{ state.camp=a.v; if(document.activeElement.id!=="campname")document.getElementById("campname").value=a.v; break; }
   }
-  refreshProvList(); renderChronicle(); saveLocal();
+  if(a.t==='release'||a.t==='delprov')pruneRiverEdges();
+  refreshProvList();renderChronicle();saveLocal();
+  refreshSelectedHex();
 }
 
 /* ═══════════════ EDIT OPERATIONS ═══════════════ */
@@ -933,7 +998,7 @@ function openNameBox(c,r){
   box.style.display="block";
   box.style.left=Math.max(8,Math.min(stage.clientWidth-246, sx+20))+"px";
   box.style.top =Math.max(8,Math.min(stage.clientHeight-120, sy-20))+"px";
-  document.getElementById("nb_title").textContent="Name this "+SITES[curSite].toLowerCase();
+  document.getElementById("nb_title").textContent="Name this "+SITES[state.hexes[nameTarget].site.t].toLowerCase();
   const inp=document.getElementById("nb_input");
   inp.value=(state.hexes[nameTarget].site||{}).name||"";
   inp.focus(); inp.select();
@@ -997,7 +1062,11 @@ function refreshProvList(){
   for(const id of state.order){
     const p=state.provinces[id];
     const mine=(p.owner||"host")===myActorId();
+    const query=document.getElementById("provinceSearch").value.toLowerCase();
+    if(query&&!p.name.toLowerCase().includes(query))continue;
     const row=document.createElement("div");
+    row.tabIndex=0;row.setAttribute("role","button");row.setAttribute("aria-pressed",String(id===activeProv));
+    row.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();row.click();}};
     row.className="provrow"+(id===activeProv?" active":"")+(mine?" mine":"");
     row.innerHTML=`<span class="pchip" style="background:${p.color}"></span>
       <span class="pname">${esc(p.name)}</span><span class="pcount">${provHexCount(id)} hx</span>
@@ -1005,6 +1074,7 @@ function refreshProvList(){
     row.onclick=()=>{activeProv=id; refreshProvList(); openDossier(id);};
     el.appendChild(row);
   }
+  updateWorkspace();
 }
 function openDossierQuiet(id){
   const p=state.provinces[id]; if(!p)return;
@@ -1016,7 +1086,6 @@ function openDossierQuiet(id){
 }
 function openDossier(id){
   const p=state.provinces[id]; if(!p)return;
-  document.getElementById("hexcard").style.display="none";
   const d=document.getElementById("dossier"); d.style.display="block";
   d_name.value=p.name; d_ruler.value=p.ruler; d_level.value=p.level;
   d_holdings.value=p.holdings; d_notes.value=p.notes; d_color.value=p.color;
@@ -1034,17 +1103,10 @@ document.getElementById("newProvBtn").onclick=newProvince;
 document.getElementById("delProvBtn").onclick=()=>activeProv&&deleteProvince(activeProv);
 
 function showHexCard(c,r){
-  const h=state.hexes[key(c,r)]; if(!h)return;
-  const p=state.provinces[h.prov];
-  document.getElementById("hexcard").style.display="block";
-  document.getElementById("hexinfo").innerHTML=
-    `<div><span class="k">Hex</span><span style="font-family:var(--mono)">${String(c).padStart(2,"0")}${String(r).padStart(2,"0")}</span></div>
-     <div><span class="k">Province</span>${p?esc(p.name):"—"}</div>
-     <div><span class="k">Terrain</span>${(TERR[h.terr]||TERR.plains).name}</div>
-     <div><span class="k">Claimed</span>${h.s} ${h.y} HC</div>
-     ${h.site?`<div><span class="k">Site</span>${SITES[h.site.t]}${h.site.name?" — "+esc(h.site.name):""}</div>`:""}`;
-  if(p)openDossier(h.prov);
-  document.getElementById("hexcard").style.display="block";
+  const h=state.hexes[key(c,r)];if(!h)return;
+  selHex=[c,r];activeProv=h.prov;openDossier(h.prov);refreshProvList();
+  populateHexCard();showPane('hex');$('pane-hex').scrollTop=0;
+  if(matchMedia('(max-width:800px)').matches)document.body.classList.add('drawer-open');
 }
 
 /* ═══════════════ CHRONICLE ═══════════════ */
@@ -1071,8 +1133,9 @@ function renderChronicle(){
     return `<div class="chron-entry"><div class="chron-when">${e.s}, ${e.y} HC</div>${lines}</div>`;
   }).join("");
 }
+let replayTimer=null;
 document.getElementById("replayBtn").onclick=()=>{
-  if(replaying)return;
+  if(replaying){stopReplay();return;}
   const keys=Object.keys(state.hexes);
   if(!keys.length)return;
   keys.sort((a,b)=>{
@@ -1080,13 +1143,14 @@ document.getElementById("replayBtn").onclick=()=>{
     return (A.y*4+SEASONS.indexOf(A.s))-(B.y*4+SEASONS.indexOf(B.s));
   });
   replaying=true; replayVisible={}; maskDirty=true;
+  document.getElementById("replayBtn").textContent="■ Stop replay";updateWorkspace();
   let i=0;
   const perTick=Math.max(1,Math.ceil(keys.length/66)); // ~6s total at 90ms ticks
   const step=()=>{
     for(let j=0;j<perTick&&i<keys.length;j++,i++) replayVisible[keys[i]]=1;
     maskDirty=true;
-    if(i<keys.length) setTimeout(step,90);
-    else setTimeout(()=>{replaying=false;replayVisible=null;maskDirty=true;},900);
+    if(i<keys.length) replayTimer=setTimeout(step,90);
+    else replayTimer=setTimeout(stopReplay,900);
   };
   step();
 };
@@ -1107,6 +1171,7 @@ document.getElementById("campname").addEventListener("input",e=>{
 
 function serialize(){ return JSON.stringify(state); }
 function restore(obj){
+  obj=validateWorld(obj);
   state=Object.assign({camp:"",season:"Spring",year:551,hexes:{},provinces:{},order:[],nextId:1,frontierRule:true},obj);
   for(const k in state.hexes){
     const h=state.hexes[k];
@@ -1127,14 +1192,14 @@ function restore(obj){
   document.getElementById("campname").value=state.camp;
   seasonLabel(); refreshProvList(); renderChronicle();
   if(activeProv)openDossier(activeProv); else document.getElementById("dossier").style.display="none";
-  maskDirty=true;
+  maskDirty=true;refreshSelectedHex();
 }
 document.getElementById("saveBtn").onclick=()=>{
   const blob=new Blob([serialize()],{type:"application/json"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
   a.download=(state.camp||"mistlands").replace(/\s+/g,"_").toLowerCase()+".mistlands.json";
-  a.click(); URL.revokeObjectURL(a.href);
+  a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);hint("Campaign backup downloaded. Keep this file to move your map between browsers.");
 };
 document.getElementById("loadBtn").onclick=()=>{
   if(NET.mode==="client"){hint("Only the host may load a chronicle during a session.");return;}
@@ -1143,19 +1208,20 @@ document.getElementById("loadBtn").onclick=()=>{
 document.getElementById("loadFile").addEventListener("change",e=>{
   const file=e.target.files[0]; if(!file)return;
   const rd=new FileReader();
-  rd.onload=()=>{ try{restore(JSON.parse(rd.result)); broadcastState(); hint("The chronicle is restored.");}
+  rd.onload=()=>{ try{const loaded=validateWorld(JSON.parse(rd.result)); stopReplay();recordUndo();restore(loaded);saveLocal();fitMap();broadcastState();hint("The chronicle is restored. Your previous map can be recovered with Undo in solo play.");}
     catch(err){ hint("That file could not be read as a Mistlands chronicle."); } };
+  if(file.size>5000000){hint("That file is too large for a Mistlands map.");e.target.value="";return;}
   rd.readAsText(file); e.target.value="";
 });
 document.getElementById("pngBtn").onclick=()=>{
+  stopReplay();
   const out=document.createElement("canvas");
   out.width=WORLD_W; out.height=WORLD_H;
-  const saved={...view}, savedDPR_tx=view.tx;
-  // render once at world scale by temporarily hijacking draw via manual composite
+
+  // Export independently of the current pan and zoom.
   const o=out.getContext("2d");
   o.fillStyle="#151A16"; o.fillRect(0,0,WORLD_W,WORLD_H);
-  // reuse main pipeline cheaply: draw onto a temp by setting view + copying is complex;
-  // simpler: rough re-render of land + fog snapshot
+
   exportRender(o);
   const a=document.createElement("a");
   a.href=out.toDataURL("image/png");
@@ -1171,22 +1237,8 @@ function exportRender(o){
     const prov=state.provinces[h.prov];
     if(prov){o.fillStyle=prov.color+"1E";o.fill();}
     o.strokeStyle="rgba(70,60,42,.28)";o.lineWidth=1;o.stroke();
+    terrGlyphs(c,r,p.x,p.y,h.terr,o);
   }
-  o.lineCap="round";
-  for(const pass of["rivers","roads"]){
-    for(const k in state.hexes){
-      const h=state.hexes[k]; if(!h[pass].length)continue;
-      const [c,r]=k.split(",").map(Number),p=center(c,r);
-      for(const d of h[pass]){
-        const n=edgeNeighbor(c,r,d),np=center(n[0],n[1]);
-        o.beginPath();o.moveTo(p.x,p.y);o.lineTo((p.x+np.x)/2,(p.y+np.y)/2);
-        if(pass==="rivers"){o.strokeStyle="#5D7E8E";o.lineWidth=3.4;o.setLineDash([]);}
-        else{o.strokeStyle="#6E5433";o.lineWidth=2;o.setLineDash([5,4]);}
-        o.stroke();
-      }
-    }
-  }
-  o.setLineDash([]);
   for(const k in state.hexes){
     const h=state.hexes[k],[c,r]=k.split(",").map(Number),p=center(c,r);
     const prov=state.provinces[h.prov]; if(!prov)continue;
@@ -1202,8 +1254,9 @@ function exportRender(o){
       o.strokeStyle=prov.color;o.lineWidth=2.2;o.stroke();
     }
   }
+  drawTransport(o,null);
   o.textAlign="center";
-  const mainCtx=ctx; // reuse glyph funcs on export ctx by temp-swap
+
   for(const k in state.hexes){
     const h=state.hexes[k]; if(!h.site)continue;
     const [c,r]=k.split(",").map(Number),p=center(c,r);
@@ -1214,17 +1267,6 @@ function exportRender(o){
       o.strokeText(h.site.name,p.x,p.y+HEX*0.72);
       o.fillStyle="#33291A";o.fillText(h.site.name,p.x,p.y+HEX*0.72);
     }
-  }
-  for(const id of state.order){
-    const prov=state.provinces[id]; let sx=0,sy=0,n=0;
-    for(const k in state.hexes){const h=state.hexes[k];if(h.prov!==id)continue;
-      const [c,r]=k.split(",").map(Number),p=center(c,r);sx+=p.x;sy+=p.y;n++;}
-    if(!n)continue;
-    const x=sx/n,y=sy/n;
-    o.font="700 15px Palatino Linotype, Georgia, serif";
-    o.lineWidth=4;o.strokeStyle="rgba(238,228,198,.75)";
-    o.strokeText(prov.name.toUpperCase(),x,y-2);
-    o.fillStyle="#4A3A1C";o.fillText(prov.name.toUpperCase(),x,y-2);
   }
   // fog
   o.save();
@@ -1241,6 +1283,7 @@ function exportRender(o){
   t.drawImage(landMask,0,0);
   o.drawImage(tmp,0,0);
   o.restore();
+  drawProvinceLabels(o,null);
   // title cartouche
   o.font="700 22px Palatino Linotype, Georgia, serif";
   o.textAlign="left";
@@ -1258,7 +1301,17 @@ function hexPathOn(o,x,y,rad){
 }
 
 /* ═══════════════ LOCAL AUTOSAVE ═══════════════ */
-function saveLocal(){ try{ localStorage.setItem("mistlands-save",serialize()); }catch(e){} }
+let saveTimer=null;
+function saveLocal(){
+  document.getElementById("saveStatus").textContent="Saving…";
+  clearTimeout(saveTimer);saveTimer=setTimeout(flushSave,250);
+}
+function flushSave(){
+  clearTimeout(saveTimer);
+  try{localStorage.setItem("mistlands-save",serialize());document.getElementById("saveStatus").textContent="✓ Saved in this browser";}
+  catch(e){document.getElementById("saveStatus").textContent="Browser save unavailable · use Save file";}
+}
+addEventListener("pagehide",flushSave);
 function loadLocal(){ try{
     const s=localStorage.getItem("mistlands-save");
     if(s)restore(JSON.parse(s));
@@ -1271,11 +1324,13 @@ function hint(msg){ const h=document.getElementById("hint"); h.textContent=msg; 
   clearTimeout(hint._t); hint._t=setTimeout(()=>h.style.opacity=0.55,3500); }
 
 cv.addEventListener("pointerdown",e=>{
-  cv.setPointerCapture(e.pointerId);
+  if(replaying)return;
+  closeNameBox(false);cv.setPointerCapture(e.pointerId);
+  gestureRecorded=false;lastRiverEdge=null;lastRoutePoint=null;
   const rect=cv.getBoundingClientRect();
   const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
-  if(e.button===2||e.button===1||spaceHeld||tool==="inspect"&&e.button===0&&!pixelHitsLand(sx,sy)){
-    panning=true;lastPan=[sx,sy];return;
+  if(e.button===2||e.button===1||spaceHeld||tool==="inspect"&&e.button===0){
+    panning=true;lastPan=[sx,sy];inspectStart=tool==="inspect"&&e.button===0&&!spaceHeld?[sx,sy]:null;panDistance=0;cv.style.cursor="grabbing";return;
   }
   if(e.button!==0)return;
   dragging=true; lastPaintHex=null;
@@ -1290,7 +1345,8 @@ cv.addEventListener("pointermove",e=>{
   const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
   const w=screenToWorld(sx,sy);
   hoverHex=pixelToHex(w.x,w.y);
-  document.getElementById("coords").textContent=hoverHex?("hex "+String(hoverHex[0]).padStart(2,"0")+String(hoverHex[1]).padStart(2,"0")):"";
+  hoveredEdge=nearestEdge(w.x,w.y,tool==='eraseriver'||tool==='crossing');
+  updateHoverReadout();
   if(NET.mode!=="solo"){
     const now=Date.now();
     if(!NET._lastCur||now-NET._lastCur>110){
@@ -1300,24 +1356,42 @@ cv.addEventListener("pointermove",e=>{
       else{const p=NET.players.host;broadcast({t:"cursor",id:"host",x:w.x,y:w.y,name:p.name,color:p.color});}
     }
   }
-  if(panning){ view.tx+=sx-lastPan[0]; view.ty+=sy-lastPan[1]; lastPan=[sx,sy]; return;}
+  if(panning){panDistance+=Math.hypot(sx-lastPan[0],sy-lastPan[1]);view.tx+=sx-lastPan[0]; view.ty+=sy-lastPan[1]; lastPan=[sx,sy]; return;}
   if(dragging)applyTool(sx,sy,false);
 });
-addEventListener("pointerup",()=>{dragging=false;panning=false;lastPaintHex=null;});
+addEventListener("pointerup",()=>{
+  if(panning&&inspectStart&&panDistance<5)applyTool(inspectStart[0],inspectStart[1],true);
+  dragging=false;panning=false;lastPaintHex=null;inspectStart=null;gestureRecorded=false;cv.style.cursor=tool==="inspect"?"grab":"crosshair";
+});
+addEventListener("pointercancel",resetPointer);
+addEventListener("blur",resetPointer);
+cv.addEventListener("pointerleave",()=>{if(!dragging&&!panning){hoverHex=null;hoveredEdge=null;}});
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("wheel",e=>{
   e.preventDefault();
   const rect=cv.getBoundingClientRect();
   const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
   const w=screenToWorld(sx,sy);
-  const ns=Math.min(3.4,Math.max(0.35,view.s*(e.deltaY<0?1.12:0.89)));
-  view.tx=sx-w.x*ns; view.ty=sy-w.y*ns; view.s=ns;
+  const ns=Math.min(3.4,Math.max(0.15,view.s*(e.deltaY<0?1.12:0.89)));
+  view.tx=sx-w.x*ns; view.ty=sy-w.y*ns; view.s=ns;updateZoom();
 },{passive:false});
 
 function applyTool(sx,sy,isDown){
   if(replaying)return;
-  const w=screenToWorld(sx,sy), hx=pixelToHex(w.x,w.y);
-  if(!hx)return;
+  const w=screenToWorld(sx,sy);
+  if(["river","eraseriver","crossing"].includes(tool)){applyEdgeTool(w,isDown);return;}
+  const hx=pixelToHex(w.x,w.y);
+  if(!hx){lastPaintHex=null;return;}
+  if(!isDown&&lastPaintHex&&tool!=="site"&&tool!=="inspect"){
+    const a=center(...lastPaintHex),b=center(...hx),steps=Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/(HEX*.45));
+    for(let i=1;i<steps;i++){
+      const cell=pixelToHex(a.x+(b.x-a.x)*i/steps,a.y+(b.y-a.y)*i/steps);
+      if(cell)applyCell(cell,false);
+    }
+  }
+  applyCell(hx,isDown);
+}
+function applyCell(hx,isDown){
   const [c,r]=hx;
   const same=lastPaintHex&&lastPaintHex[0]===c&&lastPaintHex[1]===r;
   switch(tool){
@@ -1328,6 +1402,7 @@ function applyTool(sx,sy,isDown){
       if(lastPaintHex&&!same)connectPath(tool==="road"?"roads":"rivers",lastPaintHex[0],lastPaintHex[1],c,r);
       break;
     case "erasepath": if(!same)erasePaths(c,r); break;
+    case "eraseroad":if(!same)act({t:"erasekind",c,r,kind:"roads"});break;
     case "site": if(isDown)placeSite(c,r); break;
     case "erasesite": if(!same)eraseSite(c,r); break;
     case "inspect":
@@ -1339,16 +1414,20 @@ function applyTool(sx,sy,isDown){
 
 /* tools ui */
 function setTool(t){
-  tool=t;
+  tool=t;lastRiverEdge=null;lastRoutePoint=null;hoveredEdge=null;
   document.querySelectorAll(".tool").forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
   document.getElementById("terrainSel").classList.toggle("open",t==="terrain");
   document.getElementById("siteSel").classList.toggle("open",t==="site");
-  cv.style.cursor= t==="inspect"?"default":"crosshair";
+  cv.style.cursor= t==="inspect"?"grab":"crosshair";
+  updatePalette();
   const hints={claim:"Click or drag in the mist to claim land for the active province.",
     release:"Click claimed land to return it to the mist.",
     terrain:"Pick a terrain below, then paint claimed land.",
     road:"Drag a path across hexes to lay a road.",
-    river:"Drag a path across hexes to trace a river.",
+    river:"Click a hex edge to begin a river; drag along boundaries to extend it. Release to start a separate branch.",
+    eraseroad:"Click or brush hexes to remove their roads. Rivers are preserved.",
+    eraseriver:"Trace a river edge to erase it. Click inside a hex to remove an older center-running river.",
+    crossing:"Choose a bridge or ford, then click a river edge. Use Remove to clear just the crossing.",
     erasepath:"Click hexes to clear their roads and rivers.",
     site:"Pick a site type below, then click a claimed hex to place and name it.",
     erasesite:"Click a hex to remove its site.",
@@ -1369,6 +1448,7 @@ document.querySelector('#siteSel .sub[data-site="village"]').classList.add("acti
 
 /* tabs */
 function showPane(p){
+  if(p==='hex')populateHexCard();
   document.querySelectorAll(".dtab").forEach(t=>t.classList.toggle("active",t.dataset.pane===p));
   document.querySelectorAll(".dpane").forEach(x=>x.classList.toggle("active",x.id==="pane-"+p));
 }
@@ -1376,19 +1456,391 @@ document.querySelectorAll(".dtab").forEach(t=>t.onclick=()=>showPane(t.dataset.p
 
 /* keys */
 addEventListener("keydown",e=>{
-  if(e.target.matches("input,textarea,select"))return;
+  if(e.target.matches("input,textarea,select")||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(document.getElementById("help").classList.contains("open")){if(e.key==="Escape")document.getElementById("helpClose").click();return;}
   if(e.code==="Space"){spaceHeld=true;e.preventDefault();}
   const k=e.key.toLowerCase();
   if(k==="c")setTool("claim"); else if(k==="x")setTool("release");
   else if(k==="t")setTool("terrain"); else if(k==="r")setTool("road");
+  else if(k==="b")setTool("crossing");
   else if(k==="v")setTool("river"); else if(k==="s")setTool("site");
-  else if(e.key==="Escape")setTool("inspect");
+  else if(e.key==="Escape"){stopReplay();setTool("inspect");document.body.classList.remove("drawer-open");}
+  else if(k==="f")fitMap();
 });
 addEventListener("keyup",e=>{if(e.code==="Space")spaceHeld=false;});
 
 /* help */
 document.getElementById("helpBtn").onclick=()=>document.getElementById("help").classList.add("open");
 document.getElementById("helpClose").onclick=()=>document.getElementById("help").classList.remove("open");
+
+
+function drawProvinceLabels(o,visible){
+  if(!showProvinceNames)return;
+  const occupied=[];
+  for(const [k,h]of Object.entries(state.hexes)){
+    if(visible&&!visible[k]||!h.site)continue;
+    const p=center(...k.split(',').map(Number));
+    occupied.push({x:p.x-30,y:p.y-12,w:60,h:42});
+  }
+  o.save();o.textAlign='center';o.textBaseline='middle';
+  for(const id of state.order){
+    const p=state.provinces[id];if(!p)continue;
+    const pts=Object.entries(state.hexes).filter(([k,h])=>h.prov===id&&(!visible||visible[k])).map(([k])=>center(...k.split(',').map(Number)));
+    if(!pts.length)continue;
+    const x=pts.reduce((n,p)=>n+p.x,0)/pts.length,cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;
+    const label=(p.name.trim()||'Unnamed province').toUpperCase();
+    o.font=(pts.length<4?'600 11px':'600 13px')+' Palatino Linotype, Georgia, serif';
+    const w=Math.min(220,o.measureText(label).width)+14,h=22;
+    let box;
+    for(let i=0;i<30;i++){
+      const y=cy-23-Math.ceil(i/2)*26*(i%2?-1:1);
+      const candidate={x:x-w/2,y:y-h/2,w,h};
+      if(!occupied.some(b=>candidate.x<b.x+b.w+5&&candidate.x+w>b.x-5&&candidate.y<b.y+b.h+4&&candidate.y+h>b.y-4)){box=candidate;break;}
+    }
+    if(!box)box={x:x-w/2,y:cy-55,w,h};
+    occupied.push(box);
+    o.fillStyle='rgba(239,232,211,.93)';o.fillRect(box.x,box.y,w,h);
+    o.fillStyle=p.color;o.fillRect(box.x,box.y,3,h);
+    o.fillStyle='#3a3727';o.fillText(label,x,box.y+h/2,w-14);
+  }
+  o.restore();
+}
+
+/* Workspace interactions and durable editing. Existing save format is retained. */
+let undoStack=[],redoStack=[],gestureRecorded=false,lastEditGroup=null,lastEditTime=0;
+let inspectStart=null,panDistance=0;
+const $=id=>document.getElementById(id);
+let showProvinceNames=false;
+try{showProvinceNames=localStorage.getItem('mistlands-province-names')==='true';}catch(_){}
+$('showProvinceNames').checked=showProvinceNames;
+$('showProvinceNames').addEventListener('change',e=>{
+  showProvinceNames=e.target.checked;
+  try{localStorage.setItem('mistlands-province-names',String(showProvinceNames));}catch(_){}
+});
+function updateHoverReadout(){
+  let text='Hover over land to see its province';
+  if(hoverHex){
+    const k=key(...hoverHex),h=(!replaying||replayVisible?.[k])?state.hexes[k]:null;
+    const province=h&&state.provinces[h.prov];
+    text=(province?(h.details?.label?h.details.label+' · ':'')+(province.name.trim()||'Unnamed province')+' · '+(TERR[h.terr]||TERR.plains).name:'Unclaimed mist')+' · Hex '+hoverHex.join(', ');
+  }
+  if($('coords').textContent!==text)$('coords').textContent=text;
+}
+function resetPointer(){dragging=false;panning=false;spaceHeld=false;lastPaintHex=null;inspectStart=null;gestureRecorded=false;cv.style.cursor=tool==='inspect'?'grab':'crosshair';}
+function updateZoom(){$('zoomValue').textContent=Math.round(view.s*100)+'%';}
+function zoomBy(factor){const x=cv.clientWidth/2,y=cv.clientHeight/2,w=screenToWorld(x,y);view.s=Math.max(.15,Math.min(3.4,view.s*factor));view.tx=x-w.x*view.s;view.ty=y-w.y*view.s;updateZoom();}
+function fitMap(prov=null){
+  const pts=Object.entries(state.hexes).filter(([k,h])=>!prov||h.prov===prov).map(([k])=>center(...k.split(',').map(Number)));
+  if(!pts.length&&prov){hint('This province has no land to locate yet.');return;}
+  let x1=0,y1=0,x2=WORLD_W,y2=WORLD_H;
+  if(pts.length){x1=Math.min(...pts.map(p=>p.x))-HEX*2;y1=Math.min(...pts.map(p=>p.y))-HEX*2;x2=Math.max(...pts.map(p=>p.x))+HEX*2;y2=Math.max(...pts.map(p=>p.y))+HEX*2;}
+  view.s=Math.max(.15,Math.min(1.65,(cv.clientWidth-70)/(x2-x1),(cv.clientHeight-150)/(y2-y1)));
+  view.tx=cv.clientWidth/2-(x1+x2)/2*view.s;view.ty=(cv.clientHeight+35)/2-(y1+y2)/2*view.s;updateZoom();
+}
+function updateWorkspace(){
+  const count=Object.keys(state.hexes).length,n=state.order.length;
+  $('mapSummary').textContent=n+' province'+(n===1?'':'s')+' · '+count+' claimed hex'+(count===1?'':'es');
+  $('emptyGuide').style.display=n||count?'none':'block';
+  $('provinceSearch').style.display=n>3?'block':'none';
+  $('focusProvince').disabled=!activeProv;
+  $('undoBtn').disabled=NET.mode!=='solo'||replaying||!undoStack.length;
+  $('redoBtn').disabled=NET.mode!=='solo'||replaying||!redoStack.length;
+  $('undoBtn').title=NET.mode==='solo'?'Undo last edit (Ctrl / Command + Z)':'Undo is available in solo play';
+  $('advanceBtn').disabled=NET.mode==='client'||replaying;
+  $('replayBtn').disabled=!count;
+  if(!n)$('provlist').innerHTML='<p style="font:12px/1.7 system-ui;color:var(--ink-dim);margin-bottom:12px">Your provinces will appear here. Found one to begin reclaiming the frontier.</p>';
+  updateZoom();
+}
+function updatePalette(){
+  const on=['terrain','site','crossing'].includes(tool);$('toolpanel').style.display=on?'block':'none';
+  $('tooltitle').textContent=tool==='terrain'?'Shape the land':tool==='crossing'?'Cross the water':'Place a landmark';
+  $('tooldesc').textContent=tool==='terrain'?'Choose terrain, then brush across claimed hexes.':tool==='crossing'?'Click a highlighted river edge to mark a crossing.':'Choose a site, then click claimed land to name it.';
+  $('crossingSel').classList.toggle('open',tool==='crossing');
+  document.querySelectorAll('.tool').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tool===tool)));
+}
+$('toolpanel').append($('terrainSel'),$('siteSel'),$('crossingSel'));
+document.querySelectorAll('#terrainSel .sub').forEach(b=>{const span=document.createElement('span');span.className='swatch';span.style.background=TERR[b.dataset.terr].fill;b.prepend(span);});
+$('zoomIn').onclick=()=>zoomBy(1.2);$('zoomOut').onclick=()=>zoomBy(1/1.2);$('zoomValue').onclick=()=>zoomBy(1/view.s);
+$('fitBtn').onclick=()=>fitMap();$('focusProvince').onclick=()=>{fitMap(activeProv);document.body.classList.remove('drawer-open');};
+$('drawerToggle').onclick=()=>document.body.classList.toggle('drawer-open');
+$('beginBtn').onclick=()=>{newProvince();hint('Your province is ready. Click anywhere in the mist to claim your first hex.');};
+$('provinceSearch').oninput=refreshProvList;
+for(const label of document.querySelectorAll('.field label')){const input=label.parentElement.querySelector('input,textarea');if(input&&input.id)label.htmlFor=input.id;}
+function snapshot(){return {world:serialize(),active:activeProv,hex:selHex?[...selHex]:null};}
+function recordUndo(value=snapshot()){if(NET.mode!=='solo')return;undoStack.push(value);if(undoStack.length>60)undoStack.shift();redoStack=[];}
+const baseAct=act;
+act=function(a){
+  if(replaying){hint('Stop the replay before editing the map.');return;}
+  const before=snapshot();baseAct(a);
+  if(before.world===serialize())return;
+  if(NET.mode==='solo'){
+    const grouping=(a.t==='hexdetail'?key(a.c,a.r)+':'+a.prop:a.t==='sitename'?a.k+':sitename':a.t==='prov'?a.id+':'+a.prop:a.t==='camp'?'camp':null);
+    const isStroke=dragging;
+    if(!(isStroke&&gestureRecorded)&&!(grouping&&grouping===lastEditGroup&&Date.now()-lastEditTime<900))recordUndo(before);
+    if(isStroke)gestureRecorded=true;
+    lastEditGroup=grouping;lastEditTime=Date.now();
+  }
+  updateWorkspace();
+};
+function travelHistory(back){
+  if(NET.mode!=='solo'||replaying)return;
+  const src=back?undoStack:redoStack,dst=back?redoStack:undoStack;
+  if(!src.length)return;
+  closeNameBox(false);dst.push(snapshot());const target=src.pop();restore(JSON.parse(target.world));
+  activeProv=state.provinces[target.active]?target.active:state.order[0]||null;
+  if(activeProv)openDossier(activeProv);if(target.hex&&state.hexes[key(...target.hex)])showHexCard(...target.hex);refreshProvList();saveLocal();lastEditGroup=null;
+  hint(back?'Last edit undone.':'Edit restored.');
+}
+$('undoBtn').onclick=()=>travelHistory(true);$('redoBtn').onclick=()=>travelHistory(false);
+addEventListener('keydown',e=>{
+  const typing=e.target.matches('input,textarea,select');
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('saveBtn').click();return;}
+  if(typing)return;
+  if((e.ctrlKey||e.metaKey)&&['z','y'].includes(e.key.toLowerCase())){e.preventDefault();travelHistory(e.key.toLowerCase()==='z'&&!e.shiftKey);}
+});
+function stopReplay(){clearTimeout(replayTimer);replaying=false;replayVisible=null;maskDirty=true;$('replayBtn').textContent='▷ Replay the reclamation';updateWorkspace();}
+function repairPaths(){
+  for(const [k,h]of Object.entries(state.hexes)){
+    const [c,r]=k.split(',').map(Number);
+    for(const kind of ['roads','rivers'])h[kind]=(h[kind]||[]).filter(d=>{const n=edgeNeighbor(c,r,d),other=state.hexes[key(...n)];return other&&other[kind].includes((d+3)%6);});
+  }
+}
+function validAction(a){
+  if(!a||typeof a!=='object')return false;
+  const point=(c,r)=>Number.isInteger(c)&&Number.isInteger(r)&&inBounds(c,r);
+  const text=v=>typeof v==='string'&&v.length<=20000;
+  const own=(obj,id)=>typeof id==='string'&&Object.hasOwn(obj,id);
+  switch(a.t){
+    case 'hexdetail':return point(a.c,a.r)&&!!state.hexes[key(a.c,a.r)]&&['label','resources','conditions','notes'].includes(a.prop)&&text(a.val)&&a.val.length<=({label:160,resources:4000,conditions:4000,notes:20000}[a.prop]);
+    case 'erasekind':return point(a.c,a.r)&&['roads','rivers'].includes(a.kind);
+    case 'riveredge':case 'crossing':return point(a.c,a.r)&&Number.isInteger(a.d)&&a.d>=0&&a.d<6&&edgeBanks(edgeRef(a.c,a.r,a.d)).length>0&&(a.t==='riveredge'?a.erase===undefined||typeof a.erase==='boolean':['bridge','ford','none'].includes(a.kind));
+    case 'claim':return point(a.c,a.r)&&own(state.provinces,a.prov)&&own(TERR,a.terr)&&SEASONS.includes(a.s)&&Number.isInteger(a.y);
+    case 'release':case 'erasepath':return point(a.c,a.r);
+    case 'terr':return point(a.c,a.r)&&own(TERR,a.terr);
+    case 'site':return point(a.c,a.r)&&(a.site===null||(a.site&&own(SITES,a.site.t)&&text(a.site.name)));
+    case 'sitename':return own(state.hexes,a.k)&&text(a.name);
+    case 'path':return ['roads','rivers'].includes(a.kind)&&point(a.c1,a.r1)&&point(a.c2,a.r2);
+    case 'newprov':return typeof a.id==='string'&&/^p[a-z0-9_-]+$/i.test(a.id)&&!own(state.provinces,a.id)&&state.order.length<300&&text(a.name)&&/^#[a-f0-9]{6}$/i.test(a.color);
+    case 'delprov':return own(state.provinces,a.id);
+    case 'prov':return own(state.provinces,a.id)&&['name','color','ruler','level','holdings','notes'].includes(a.prop)&&(a.prop==='color'?/^#[a-f0-9]{6}$/i.test(a.val):text(a.val)||a.prop==='level'&&Number.isFinite(a.val));
+    case 'season':return SEASONS.includes(a.season)&&Number.isInteger(a.year);
+    case 'camp':return text(a.v);
+    default:return false;
+  }
+}
+function validateWorld(obj){
+  const dict=v=>v&&typeof v==='object'&&!Array.isArray(v);
+  if(!dict(obj)||!dict(obj.hexes)||!dict(obj.provinces)||!Array.isArray(obj.order))throw Error('Not a Mistlands campaign.');
+  const safeId=id=>typeof id==='string'&&!['__proto__','prototype','constructor'].includes(id)&&id.length<100;
+  if(obj.order.length>300||Object.keys(obj.hexes).length>COLS*ROWS||obj.order.some(id=>!safeId(id)||!Object.hasOwn(obj.provinces,id))||new Set(obj.order).size!==obj.order.length)throw Error('Invalid province list.');
+  const str=(v,n=20000)=>String(v??'').slice(0,n);
+  const color=(v,fallback)=>/^#[a-f0-9]{6}$/i.test(v)?v:fallback;
+  const year=Number.isInteger(obj.year)&&obj.year>=0&&obj.year<=99999?obj.year:551;
+  const out={camp:str(obj.camp,200),season:SEASONS.includes(obj.season)?obj.season:'Spring',year,hexes:{},riverEdges:{},provinces:{},order:[...obj.order],nextId:1,frontierRule:obj.frontierRule!==false};
+  for(const id of out.order){const p=obj.provinces[id];if(!dict(p))throw Error('Invalid province.');out.provinces[id]={name:str(p.name,200),ruler:str(p.ruler,200),holdings:str(p.holdings),notes:str(p.notes),level:Math.max(0,Math.min(10,parseInt(p.level)||0)),color:color(p.color,'#8A3030'),owner:str(p.owner||'host',100),ownerName:str(p.ownerName||'Game Master',100),ownerColor:color(p.ownerColor,'#D2AC55')};}
+  for(const [k,h]of Object.entries(obj.hexes)){
+    const match=/^(\d+),(\d+)$/.exec(k);if(!match||!inBounds(+match[1],+match[2])||!dict(h)||!Object.hasOwn(out.provinces,h.prov))throw Error('Invalid hex or missing province.');
+    const dirs=v=>Array.isArray(v)?[...new Set(v.filter(d=>Number.isInteger(d)&&d>=0&&d<6))]:[];
+    out.hexes[k]={terr:Object.hasOwn(TERR,h.terr)?h.terr:'plains',prov:h.prov,s:SEASONS.includes(h.s)?h.s:'Spring',y:Number.isInteger(h.y)?h.y:year,roads:dirs(h.roads),rivers:dirs(h.rivers),site:h.site&&Object.hasOwn(SITES,h.site.t)?{t:h.site.t,name:str(h.site.name,200)}:null,details:{label:str(h.details?.label,160),resources:str(h.details?.resources,4000),conditions:str(h.details?.conditions,4000),notes:str(h.details?.notes,20000)}};
+  }
+  for(const [k,h]of Object.entries(out.hexes)){const[c,r]=k.split(',').map(Number);for(const kind of ['roads','rivers'])h[kind]=h[kind].filter(d=>{const n=out.hexes[key(...edgeNeighbor(c,r,d))];return n&&n[kind].includes((d+3)%6);});}
+  normalizeRiverEdges(obj,out);
+  return out;
+}
+const baseOpenDossier=openDossier;
+openDossier=function(id){baseOpenDossier(id);if(matchMedia('(max-width:800px)').matches&&tool==='inspect')document.body.classList.add('drawer-open');};
+const baseLeave=leaveSession;
+leaveSession=function(){baseLeave();undoStack=[];redoStack=[];updateWorkspace();};
+$('leaveBtn').onclick=leaveSession;
+$('help').setAttribute('role','dialog');$('help').setAttribute('aria-label',"Cartographer's guide");
+$('helpBtn').onclick=()=>{$('help').classList.add('open');$('helpClose').focus();};
+$('helpClose').onclick=()=>{$('help').classList.remove('open');$('helpBtn').focus();};
+$('help').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();$('helpClose').focus();}});
+
+/* Detailed hex records and boundary-following waterways. */
+let hoveredEdge=null,lastRiverEdge=null,lastRoutePoint=null,curCrossing='bridge',edgeGraphCache=null;
+const EDGE_NAMES=['Northeast','East','Southeast','Southwest','West','Northwest'];
+function edgeRef(c,r,d){
+  const n=edgeNeighbor(c,r,d);
+  if(inBounds(...n)&&n[1]*COLS+n[0]<r*COLS+c){c=n[0];r=n[1];d=(d+3)%6;}
+  return {c,r,d,id:c+','+r+','+d};
+}
+function edgeBanks(ref,world=state){
+  const n=edgeNeighbor(ref.c,ref.r,ref.d);
+  return [world.hexes[key(ref.c,ref.r)],world.hexes[key(...n)]].filter(Boolean);
+}
+function edgePoints(ref){
+  const p=center(ref.c,ref.r),a=(60*ref.d-90)*Math.PI/180,b=a+Math.PI/3;
+  return [{x:p.x+HEX*Math.cos(a),y:p.y+HEX*Math.sin(a)},{x:p.x+HEX*Math.cos(b),y:p.y+HEX*Math.sin(b)}];
+}
+function edgeDistance(x,y,ref){
+  const [a,b]=edgePoints(ref),dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy)));
+  return Math.hypot(x-a.x-t*dx,y-a.y-t*dy);
+}
+function nearestEdge(x,y,existingOnly=false){
+  const hx=pixelToHex(x,y);if(!hx)return null;
+  let best=null,dist=Infinity;const seen=new Set();
+  for(const [c,r]of [hx,...neighbors(...hx)])for(let d=0;d<6;d++){
+    const ref=edgeRef(c,r,d);if(seen.has(ref.id))continue;seen.add(ref.id);
+    if(!edgeBanks(ref).length||existingOnly&&!state.riverEdges?.[ref.id])continue;
+    const n=edgeDistance(x,y,ref);if(n<dist){best=ref;dist=n;}
+  }
+  // Existing-only tools should not select a distant river across a hex.
+  return existingOnly&&dist>12?null:best;
+}
+function canEditEdge(ref){return NET.mode!=='client'||!NET.permOwn||edgeBanks(ref).every(h=>ownerOf(h.prov)===NET.myId);}
+function edgeGraph(){
+  const signature=Object.keys(state.hexes).sort().join(';');if(edgeGraphCache?.signature===signature)return edgeGraphCache;
+  const edges=new Map(),vertices=new Map();
+  const vertex=p=>Math.round(p.x*1000)+','+Math.round(p.y*1000);
+  for(const k of Object.keys(state.hexes)){const[c,r]=k.split(',').map(Number);for(let d=0;d<6;d++){const ref=edgeRef(c,r,d);if(edges.has(ref.id))continue;ref.vertices=edgePoints(ref).map(vertex);edges.set(ref.id,ref);for(const v of ref.vertices){if(!vertices.has(v))vertices.set(v,[]);vertices.get(v).push(ref.id);}}}
+  return edgeGraphCache={signature,edges,vertices};
+}
+function riverEdgeRoute(from,to){
+  if(from.id===to.id)return [to];const g=edgeGraph();
+  if(!g.edges.has(from.id)||!g.edges.has(to.id))return [];
+  const queue=[from.id],prev=new Map([[from.id,null]]);let reached=false;
+  for(let i=0;i<queue.length&&i<10000;i++){
+    const id=queue[i];if(id===to.id){reached=true;break;}
+    const current=g.edges.get(id);
+    const next=[...new Set(current.vertices.flatMap(v=>g.vertices.get(v)))].map(id=>g.edges.get(id)).sort((a,b)=>{
+      const p=edgePoints(to)[0];return edgeDistance(p.x,p.y,a)-edgeDistance(p.x,p.y,b);
+    });
+    for(const ref of next){if(prev.has(ref.id)||!canEditEdge(ref))continue;prev.set(ref.id,id);queue.push(ref.id);}
+  }
+  if(!reached)return [];const route=[];let id=to.id;while(id!==null){route.push(g.edges.get(id));id=prev.get(id);}return route.reverse();
+}
+function applyEdgeTool(w,isDown){
+  if(tool==='crossing'){
+    if(!isDown)return;
+    const ref=nearestEdge(w.x,w.y,true);if(!ref){hint('Click directly on an edge river to place a crossing.');return;}
+    act({t:'crossing',c:ref.c,r:ref.r,d:ref.d,kind:curCrossing});return;
+  }
+  const prev=isDown?null:lastRoutePoint,steps=prev?Math.max(1,Math.ceil(Math.hypot(w.x-prev.x,w.y-prev.y)/(HEX*.45))):1;
+  for(let i=1;i<=steps;i++){
+    const x=prev?prev.x+(w.x-prev.x)*i/steps:w.x,y=prev?prev.y+(w.y-prev.y)*i/steps:w.y;
+    if(tool==='eraseriver'){
+      const ref=nearestEdge(x,y,true);
+      if(ref)act({t:'riveredge',c:ref.c,r:ref.r,d:ref.d,erase:true});
+      else{const hx=pixelToHex(x,y);if(hx&&state.hexes[key(...hx)]?.rivers.length)act({t:'erasekind',c:hx[0],r:hx[1],kind:'rivers'});}
+      continue;
+    }
+    const ref=nearestEdge(x,y);if(!ref){lastRiverEdge=null;continue;}
+    if(!canEditEdge(ref)){lastRiverEdge=null;hint('Both banks must belong to you to edit this river in the session.');continue;}
+    if(lastRiverEdge?.id===ref.id)continue;
+    const path=lastRiverEdge?riverEdgeRoute(lastRiverEdge,ref):[ref];
+    if(!path.length){lastRiverEdge=null;hint('Start a new stroke to draw on disconnected land.');continue;}
+    for(const edge of path)if(!state.riverEdges?.[edge.id])act({t:'riveredge',c:edge.c,r:edge.r,d:edge.d});
+    lastRiverEdge=ref;
+  }
+  lastRoutePoint={...w};
+}
+function normalizeRiverEdges(obj,out){
+  if(obj.riverEdges===undefined)return;
+  if(!obj.riverEdges||typeof obj.riverEdges!=='object'||Array.isArray(obj.riverEdges)||Object.keys(obj.riverEdges).length>COLS*ROWS*6)throw Error('Invalid river edges.');
+  for(const [id,data]of Object.entries(obj.riverEdges)){
+    const m=/^(\d+),(\d+),([0-5])$/.exec(id);if(!m||!inBounds(+m[1],+m[2]))throw Error('Invalid river edge coordinate.');
+    const ref=edgeRef(+m[1],+m[2],+m[3]);if(ref.id!==id||!edgeBanks(ref,out).length||!data||typeof data!=='object'||Array.isArray(data))throw Error('Invalid river edge.');
+    out.riverEdges[id]={crossing:['bridge','ford'].includes(data.crossing)?data.crossing:null};
+  }
+}
+function pruneRiverEdges(){for(const id of Object.keys(state.riverEdges||{})){const[c,r,d]=id.split(',').map(Number);if(!edgeBanks({c,r,d}).length)delete state.riverEdges[id];}}
+function eraseRouteKind(c,r,kind){
+  const h=state.hexes[key(c,r)];if(!h)return;
+  h[kind]=[];
+  for(const[nc,nr]of neighbors(c,r)){const other=state.hexes[key(nc,nr)];if(other)other[kind]=other[kind].filter(d=>d!==dirBetween(nc,nr,c,r));}
+}
+function pathThroughHex(o,c,r,dirs){
+  const p=center(c,r),ends=dirs.map(d=>{const n=center(...edgeNeighbor(c,r,d));return{x:(p.x+n.x)/2,y:(p.y+n.y)/2};});
+  o.beginPath();
+  if(ends.length===2){const[a,b]=ends;o.moveTo(a.x,a.y);o.bezierCurveTo(a.x+(p.x-a.x)*.8,a.y+(p.y-a.y)*.8,b.x+(p.x-b.x)*.8,b.y+(p.y-b.y)*.8,b.x,b.y);}
+  else for(const e of ends){o.moveTo(p.x,p.y);o.quadraticCurveTo((p.x+e.x)/2,(p.y+e.y)/2,e.x,e.y);}
+}
+function traceRiverEdge(o,ref){
+  const[a,b]=edgePoints(ref),dx=b.x-a.x,dy=b.y-a.y,bend=((ref.c*7+ref.r*11+ref.d)%2?1:-1)*1.6;
+  o.beginPath();o.moveTo(a.x,a.y);o.quadraticCurveTo((a.x+b.x)/2-dy/HEX*bend,(a.y+b.y)/2+dx/HEX*bend,b.x,b.y);
+}
+function drawTransport(o,visible){
+  const shown=k=>!!state.hexes[k]&&(!visible||!!visible[k]);
+  o.save();o.lineCap='round';o.lineJoin='round';o.setLineDash([]);
+  // Older saves retain their center-running rivers without relocation.
+  for(const[k,h]of Object.entries(state.hexes)){
+    if(!shown(k)||!h.rivers.length)continue;const[c,r]=k.split(',').map(Number);pathThroughHex(o,c,r,h.rivers);
+    o.strokeStyle='#496f7f';o.lineWidth=5;o.stroke();o.strokeStyle='#9fc6d0';o.lineWidth=2.7;o.stroke();
+  }
+  const riverList=[];
+  for(const[id,data]of Object.entries(state.riverEdges||{})){
+    const[c,r,d]=id.split(',').map(Number),ref={c,r,d,id},n=edgeNeighbor(c,r,d);
+    if(!shown(key(c,r))&&!shown(key(...n)))continue;
+    riverList.push([ref,data]);traceRiverEdge(o,ref);o.strokeStyle='#496f7f';o.lineWidth=5;o.stroke();o.strokeStyle='#a5cbd1';o.lineWidth=2.8;o.stroke();
+  }
+  for(const[k,h]of Object.entries(state.hexes)){
+    if(!shown(k)||!h.roads.length)continue;const[c,r]=k.split(',').map(Number);pathThroughHex(o,c,r,h.roads);
+    o.strokeStyle='#725a37';o.lineWidth=4.3;o.stroke();o.strokeStyle='#e3cf98';o.lineWidth=2.7;o.stroke();
+    o.strokeStyle='#a99061';o.lineWidth=.7;o.setLineDash([2,3]);o.stroke();o.setLineDash([]);
+  }
+  for(const[ref,data]of riverList){
+    const p=center(ref.c,ref.r),n=center(...edgeNeighbor(ref.c,ref.r,ref.d)),[a,b]=edgePoints(ref),x=(a.x+b.x)/2,y=(a.y+b.y)/2;
+    const road=state.hexes[key(ref.c,ref.r)]?.roads.includes(ref.d);
+    if(!data.crossing&&!road)continue;
+    o.save();o.translate(x,y);o.rotate(Math.atan2(n.y-p.y,n.x-p.x));
+    if(data.crossing==='bridge'){
+      o.fillStyle='#d6b37a';o.fillRect(-8,-4,16,8);o.strokeStyle='#503b25';o.lineWidth=1.3;o.strokeRect(-8,-4,16,8);
+      o.beginPath();for(let dx=-5;dx<=5;dx+=3){o.moveTo(dx,-3);o.lineTo(dx,3);}o.stroke();
+      o.beginPath();o.moveTo(-9,-5);o.lineTo(9,-5);o.moveTo(-9,5);o.lineTo(9,5);o.stroke();
+    }else if(data.crossing==='ford'){
+      o.fillStyle='#eee2b8';o.strokeStyle='#50646a';o.lineWidth=.7;
+      for(let dx=-7;dx<=7;dx+=3.5){o.beginPath();o.ellipse(dx,dx%2?1:-1,1.8,1.35,0,0,Math.PI*2);o.fill();o.stroke();}
+    }else{
+      // An unfinished road crossing stays visibly interrupted by water.
+      o.strokeStyle='#648c9e';o.lineWidth=5;o.beginPath();o.moveTo(0,-5);o.lineTo(0,5);o.stroke();
+      o.strokeStyle='#e9d69c';o.lineWidth=1.2;o.setLineDash([1.5,2]);o.beginPath();o.moveTo(-7,0);o.lineTo(7,0);o.stroke();
+    }
+    o.restore();
+  }
+  o.restore();
+}
+function drawEdgePreview(o){
+  if(replaying||!hoveredEdge||!['river','eraseriver','crossing'].includes(tool))return;
+  o.save();traceRiverEdge(o,hoveredEdge);o.lineWidth=7/view.s;o.strokeStyle=tool==='eraseriver'?'rgba(190,72,60,.65)':'rgba(239,202,103,.8)';o.stroke();o.restore();
+}
+function populateHexCard(){
+  const h=selHex&&state.hexes[key(...selHex)];
+  $('hexcard').style.display=h?'block':'none';$('hexEmpty').style.display=h?'none':'block';if(!h)return;
+  const[c,r]=selHex,p=state.provinces[h.prov],details=h.details||{};
+  $('hexNumber').textContent='HEX '+String(c).padStart(2,'0')+' · '+String(r).padStart(2,'0');
+  $('hexProvince').textContent=p?.name||'Unassigned land';$('hexinfo').textContent=details.label||'Local dossier';
+  const values={h_label:details.label||'',h_terrain:h.terr,h_site:h.site?.t||'',h_sitename:h.site?.name||'',h_resources:details.resources||'',h_conditions:details.conditions||'',h_notes:details.notes||''};
+  const writable=NET.mode!=='client'||!NET.permOwn||ownerOf(h.prov)===NET.myId;
+  for(const[id,value]of Object.entries(values)){if(document.activeElement.id!==id)$(id).value=value;$(id).disabled=!writable||(id==='h_sitename'&&!h.site);}
+  $('hexClaimed').textContent='Claimed in '+h.s+', '+h.y+' HC.';
+  if(!String(document.activeElement.id||'').startsWith('hc_'))renderHexConnections(c,r,writable);
+}
+function refreshSelectedHex(){populateHexCard();}
+function renderHexConnections(c,r,writable){
+  const h=state.hexes[key(c,r)],el=$('hexConnections');el.innerHTML='';
+  const line=document.createElement('p');line.textContent=h.roads.length?'Road connections: '+h.roads.map(d=>EDGE_NAMES[d].toLowerCase()).join(', ')+'.':'No road connections.';el.appendChild(line);
+  if(h.rivers.length){const old=document.createElement('p');old.className='hex-help';old.textContent='Older river channel: '+h.rivers.map(d=>EDGE_NAMES[d].toLowerCase()).join(', ')+'. Use Erase River inside this hex to remove it.';el.appendChild(old);}
+  let count=0;
+  for(let d=0;d<6;d++){
+    const ref=edgeRef(c,r,d),river=state.riverEdges?.[ref.id];if(!river)continue;count++;
+    const row=document.createElement('div');row.className='connection-row';
+    const label=document.createElement('label');label.htmlFor='hc_'+d;label.textContent=EDGE_NAMES[d]+' river bank'+(h.roads.includes(d)?' · road crossing':'');row.appendChild(label);
+    const select=document.createElement('select');select.id='hc_'+d;select.setAttribute('aria-label',EDGE_NAMES[d]+' river crossing');
+    for(const[value,name]of [['none',h.roads.includes(d)?'No crossing built':'No crossing'],['bridge','Bridge'],['ford','Ford']]){const option=document.createElement('option');option.value=value;option.textContent=name;select.appendChild(option);}
+    select.value=river.crossing||'none';select.disabled=!writable||!canEditEdge(ref);
+    select.onchange=()=>act({t:'crossing',c:ref.c,r:ref.r,d:ref.d,kind:select.value});row.appendChild(select);el.appendChild(row);
+  }
+  if(!count){const empty=document.createElement('p');empty.className='hex-help';empty.textContent='No rivers along this hex’s boundaries.';el.appendChild(empty);}
+}
+for(const[id,prop]of [['h_label','label'],['h_resources','resources'],['h_conditions','conditions'],['h_notes','notes']])$(id).addEventListener('input',e=>{if(selHex)act({t:'hexdetail',c:selHex[0],r:selHex[1],prop,val:e.target.value});});
+$('h_terrain').addEventListener('change',e=>{if(selHex)act({t:'terr',c:selHex[0],r:selHex[1],terr:e.target.value});});
+$('h_site').addEventListener('change',e=>{if(!selHex)return;const[c,r]=selHex,h=state.hexes[key(c,r)];act({t:'site',c,r,site:e.target.value?{t:e.target.value,name:h.site?.name||''}:null});});
+$('h_sitename').addEventListener('input',e=>{if(selHex)act({t:'sitename',k:key(...selHex),name:e.target.value});});
+$('inspectHexBtn').onclick=()=>{setTool('inspect');document.body.classList.remove('drawer-open');hint('Click claimed land to open its hex dossier.');};
+$('hexRoadBtn').onclick=()=>{setTool('road');document.body.classList.remove('drawer-open');};
+$('hexRiverBtn').onclick=()=>{setTool('river');document.body.classList.remove('drawer-open');};
+document.querySelectorAll('[data-crossing]').forEach(b=>b.onclick=()=>{curCrossing=b.dataset.crossing;document.querySelectorAll('[data-crossing]').forEach(other=>other.classList.toggle('active',other===b));});
 
 /* ═══════════════ BOOT ═══════════════ */
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
@@ -1398,6 +1850,7 @@ seasonLabel(); refreshProvList(); renderChronicle();
 view.tx=(cv.clientWidth-WORLD_W*view.s)/2;
 view.ty=(cv.clientHeight-WORLD_H*view.s)/2;
 setTool(Object.keys(state.hexes).length?"inspect":"claim");
+fitMap();updateWorkspace();
 requestAnimationFrame(draw);
 </script>
 </body>
