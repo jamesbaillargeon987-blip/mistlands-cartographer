@@ -1684,29 +1684,24 @@ document.getElementById("helpClose").onclick=()=>document.getElementById("help")
 
 function drawProvinceLabels(o,visible){
   if(!showProvinceNames)return;
-  const occupied=[];
-  for(const [k,h]of Object.entries(state.hexes)){
-    if(visible&&!visible[k]||!h.site)continue;
-    const p=center(...k.split(',').map(Number));
-    occupied.push({x:p.x-30,y:p.y-12,w:60,h:42});
-  }
   o.save();o.textAlign='center';o.textBaseline='middle';
   for(const id of state.order){
     const p=state.provinces[id];if(!p)continue;
     const pts=Object.entries(state.hexes).filter(([k,h])=>h.prov===id&&(!visible||visible[k])).map(([k])=>center(...k.split(',').map(Number)));
     if(!pts.length)continue;
-    const x=pts.reduce((n,p)=>n+p.x,0)/pts.length,cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;
+    const cx=pts.reduce((n,p)=>n+p.x,0)/pts.length,cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;
+    // Anchor to the province's hex nearest its centre. Never shift the label
+    // to avoid other artwork: visibility is controlled by the checkbox.
+    // An actual member hex keeps concave and divided provinces on their own land.
+    const anchor=pts.reduce((best,p)=>{
+      const d=(p.x-cx)**2+(p.y-cy)**2,bd=(best.x-cx)**2+(best.y-cy)**2;
+      return d<bd-1e-7 || Math.abs(d-bd)<1e-7&&(p.y<best.y||p.y===best.y&&p.x<best.x)?p:best;
+    });
+    const x=anchor.x;
     const label=(p.name.trim()||'Unnamed province').toUpperCase();
     o.font=(pts.length<4?'600 11px':'600 13px')+' Palatino Linotype, Georgia, serif';
     const w=Math.min(220,o.measureText(label).width)+14,h=22;
-    let box;
-    for(let i=0;i<30;i++){
-      const y=cy-23-Math.ceil(i/2)*26*(i%2?-1:1);
-      const candidate={x:x-w/2,y:y-h/2,w,h};
-      if(!occupied.some(b=>candidate.x<b.x+b.w+5&&candidate.x+w>b.x-5&&candidate.y<b.y+b.h+4&&candidate.y+h>b.y-4)){box=candidate;break;}
-    }
-    if(!box)box={x:x-w/2,y:cy-55,w,h};
-    occupied.push(box);
+    const box={x:x-w/2,y:anchor.y-h/2,w,h};
     o.fillStyle='rgba(239,232,211,.93)';o.fillRect(box.x,box.y,w,h);
     o.fillStyle=p.color;o.fillRect(box.x,box.y,3,h);
     o.fillStyle='#3a3727';o.fillText(label,x,box.y+h/2,w-14);
